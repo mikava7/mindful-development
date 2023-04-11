@@ -14,7 +14,7 @@ const Home = () => {
 
 	const isPostsLoading = posts.status === "loading";
 	const isTagsLoading = tags.status === "loading";
-
+	console.log("posts", posts);
 	useEffect(() => {
 		dispatch(fetchPosts());
 	}, []);
@@ -38,8 +38,10 @@ const Home = () => {
 							id={item._id}
 							title={item.title}
 							content={item.content}
-							email={item.email}
-							avatarUrl={item.imageUrl}
+							createdAt={item.createdAt}
+							imageUrl={item.imageUrl}
+							author={item.author.fullName}
+							viewCount={item.viewCount}
 						/>
 					);
 				})}

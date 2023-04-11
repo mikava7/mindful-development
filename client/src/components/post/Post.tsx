@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { UserInfo } from "../UserInfo";
 
 interface PostProps {
@@ -17,24 +17,55 @@ interface PostProps {
 }
 
 const Post: React.FC<PostProps> = (item) => {
-	const onClickRemove = () => {};
+	const [expanded, setExpanded] = useState(false);
+
+	const formattedDate = new Date(item.createdAt).toLocaleDateString("en-US", {
+		day: "numeric",
+		month: "long",
+		year: "numeric",
+	});
+
+	let content = item.content;
+	if (!content) {
+		content = "No content available";
+	}
+
+	const postContent = expanded ? (
+		<p className="content">{content}</p>
+	) : (
+		<p>{content.slice(0, 100)}...</p>
+	);
+
+	const toggleReadMore = () => {
+		setExpanded(!expanded);
+	};
+
+	const readMoreButton = expanded ? (
+		<button onClick={toggleReadMore}>Read less</button>
+	) : (
+		<button onClick={toggleReadMore}>Read more</button>
+	);
 
 	return (
-		<div>
-			<img
-				src={item.imageUrl}
-				alt={item.title}
-			/>
-
+		<div className="post-container">
 			<div>
-				<div>
-					<h2>{item.title}</h2>
-					<p>{item.author}</p>
-					<p>{item.email}</p>
-					<p>{item.content}</p>
+				<h2 className="title">{item.title}</h2>
+				{postContent} {readMoreButton}
+				<img
+					className="image-container"
+					src={item.imageUrl}
+					alt={item.title}
+				/>
+			</div>
+			<div>
+				<div className="post-details">
+					<p className="author">{item.author}</p>
+					<p className="time">{formattedDate}</p>
+					<p className="viewCount">Views: {item.viewCount}</p>
 				</div>
 			</div>
 		</div>
 	);
 };
+
 export default Post;
