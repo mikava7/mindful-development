@@ -5,8 +5,8 @@ const API_BASE_URL = "http://localhost:5000";
 
 const getAllPosts = async (): Promise<PostType[]> => {
 	try {
-		const response: AxiosResponse<PostType[]> = await axios.get(`${API_BASE_URL}/posts`);
-		return response.data;
+		// const response: AxiosResponse<PostType[]> = await axios.get(`${API_BASE_URL}/posts`);
+		// return response.data;
 	} catch (error) {
 		console.error("Error fetching data:", error);
 		return [];
