@@ -11,6 +11,7 @@ const Home = () => {
 	const dispatch = useDispatch();
 
 	const { posts, tags } = useSelector((state) => state.posts) || {};
+	const userData = useSelector((state) => state.auth.data) || {};
 
 	const isPostsLoading = posts.status === "loading";
 	const isTagsLoading = tags.status === "loading";
@@ -21,7 +22,7 @@ const Home = () => {
 	useEffect(() => {
 		dispatch(fetchTags());
 	}, []);
-
+	console.log(posts);
 	return (
 		<div>
 			<div>
@@ -41,6 +42,8 @@ const Home = () => {
 							imageUrl={item.imageUrl}
 							author={item.author.fullName}
 							viewCount={item.viewCount}
+							tags={item.tags}
+							isEditable={userData?._id === item.author?._id}
 						/>
 					);
 				})}

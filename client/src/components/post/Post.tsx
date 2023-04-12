@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { UserInfo } from "../UserInfo";
-
+import { Link } from "react-router-dom";
 interface PostProps {
 	_id: string;
 	title: string;
@@ -45,9 +45,19 @@ const Post: React.FC<PostProps> = (item) => {
 	) : (
 		<button onClick={toggleReadMore}>Read more</button>
 	);
+	const onClickRemove = () => {
+		console.log("removed");
+	};
 
 	return (
 		<div className="post-container">
+			{item.isEditable && (
+				<div className="edit-buttons">
+					<Link to={`/posts/${item._id}/edit`}>Edit</Link>
+
+					<button onClick={onClickRemove}>delete</button>
+				</div>
+			)}
 			<div>
 				<h2 className="title">{item.title}</h2>
 				{postContent} {readMoreButton}
