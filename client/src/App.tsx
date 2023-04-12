@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Form from "./components/Form";
 import Posts from "./components/post/Posts";
@@ -6,9 +6,17 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Header from "./components/Header";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData, selectAuthStatus } from "./redux/slices/auth.ts";
 import { Routes, Route } from "react-router-dom";
 function App() {
+	const dispatch = useDispatch();
+	const authStatus = useSelector(selectAuthStatus);
+
+	useEffect(() => {
+		dispatch(fetchUserData());
+	}, []);
+
 	return (
 		<div className="App">
 			<Header />

@@ -1,23 +1,22 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserData, selectAuthStatus } from "../redux/slices/auth.ts";
+import { fetchLogin, selectAuthStatus, selectAuthError } from "../redux/slices/auth.ts";
 import { Navigate } from "react-router-dom";
+
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = () => {
-	// Select the authentication status from the Redux store
+	const authError = useSelector(selectAuthError);
 	const authStatus = useSelector(selectAuthStatus);
-
-	// Get the dispatch function from the Redux store
 	const dispatch = useDispatch();
 
-	// Use the useForm hook to handle form submission and validation
 	const {
 		register,
 		handleSubmit,
 		setError,
-		formState: { error, isValid },
+		formState: { errors, isValid },
+		reset,
 	} = useForm({
 		defaultValues: {
 			email: "irakli@example.com",
@@ -25,13 +24,32 @@ const Login: React.FC<LoginProps> = () => {
 		},
 	});
 
-	// Define the onSubmit function to dispatch the fetchUserData action with the form values
-	const onSubmit = (values) => {
-		dispatch(fetchUserData(values));
+	// Submit the login form
+	const onSubmit = async (values) => {
+		// Call the fetchUserData action creator and wait for the response
+		const data = await dispatch(fetchLogin(values));
+
+		// If the response contains a token, set it in local storage
+		if (data.payload && "token" in data.payload) {
+			window.localStorage.setItem("token", data.payload.token);
+		} else {
+			// Otherwise, show an error message
+			alert("Invalid email or password. Please try again.");
+		}
 	};
 
-	// If the authentication status is "loaded", redirect the user to the home page
-	if (authStatus === "loaded") {
+	// Handle errors from the auth slice
+	React.useEffect(() => {
+		if (authError) {
+			setError("auth", {
+				type: "manual",
+				message: authError.message,
+			});
+			reset({ ...errors, password: "" });
+		}
+	}, [authError]);
+
+	if (authStatus) {
 		return <Navigate to="/" />;
 	}
 
@@ -44,18 +62,23 @@ const Login: React.FC<LoginProps> = () => {
 						className="field"
 						type="email"
 						name="email"
+						placeholder="Enter email"
 						{...register("email", { required: "Enter email" })}
 					/>
 				</label>
+				{errors.email && <p>{errors.email.message}</p>}
 				<label>
 					Password:
 					<input
 						className="field"
 						type="password"
 						name="password"
+						placeholder="Enter password"
 						{...register("password", { required: "Enter password" })}
 					/>
 				</label>
+				{errors.password && <p>{errors.password.message}</p>}
+				{errors.auth && <p>{errors.auth.message}</p>}
 				<button type="submit">Login</button>
 			</form>
 		</div>

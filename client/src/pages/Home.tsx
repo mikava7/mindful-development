@@ -14,7 +14,6 @@ const Home = () => {
 
 	const isPostsLoading = posts.status === "loading";
 	const isTagsLoading = tags.status === "loading";
-	console.log("posts", posts);
 	useEffect(() => {
 		dispatch(fetchPosts());
 	}, []);

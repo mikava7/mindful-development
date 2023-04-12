@@ -1,7 +1,6 @@
 import React from "react";
 
 const Tags = ({ items }: { items: string[] }) => {
-	console.log("items", items);
 	return (
 		<ul>
 			{items.map((tags, i) => (

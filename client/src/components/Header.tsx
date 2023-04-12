@@ -1,10 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthStatus, clearUserData } from "../redux/slices/auth";
 
 const Header: React.FC = () => {
-	const isAuth: boolean = false;
+	const authStatus = useSelector(selectAuthStatus);
+	const dispatch = useDispatch();
 
-	const onClickLogout = () => {};
+	const onClickLogout = () => {
+		// Prompt the user to confirm they want to log out
+		if (window.confirm("Do you want to log out?")) {
+			// Dispatch the clearUserData action to clear the user data in Redux store
+			dispatch(clearUserData());
+			// Remove the token from local storage
+			window.localStorage.removeItem("token");
+		}
+	};
+	console.log("authStatus", authStatus);
 
 	return (
 		<div className="header-container">
@@ -18,10 +30,10 @@ const Header: React.FC = () => {
 						Home
 					</Link>
 					<div className="header-auth">
-						{isAuth ? (
+						{authStatus ? (
 							<>
 								<Link
-									to="/posts/create"
+									to="/posts"
 									className="header-link"
 								>
 									create post
