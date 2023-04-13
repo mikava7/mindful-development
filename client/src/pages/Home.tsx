@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import Form from "../components/Form";
 import Posts from "../components/post/Posts";
 import Post from "../components/post/Post";
@@ -8,6 +9,27 @@ import axios from "../axios.ts";
 import { fetchPosts, fetchTags } from "../redux/slices/posts";
 
 const Home = () => {
+	const [data, setData] = useState("");
+	const [isLoading, setIsLoading] = useState("");
+
+	const { id } = useParams();
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				if (id) {
+					const response = await axios.get(`/posts/${id}`);
+					setData(response.data);
+				}
+			} catch (error) {
+				console.log(error);
+				alert("Cannot get post.");
+			}
+		};
+		fetchData();
+	}, [id]);
+
+	console.log("data in home", data);
 	const dispatch = useDispatch();
 
 	const { posts, tags } = useSelector((state) => state.posts) || {};
@@ -22,7 +44,7 @@ const Home = () => {
 	useEffect(() => {
 		dispatch(fetchTags());
 	}, []);
-	console.log(posts);
+
 	return (
 		<div>
 			<div>

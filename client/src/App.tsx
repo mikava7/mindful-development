@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Header from "./components/Header";
+import CreatePost from "./pages/CreatePost";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData, selectAuthStatus } from "./redux/slices/auth.ts";
 import { Routes, Route } from "react-router-dom";
@@ -28,6 +29,10 @@ function App() {
 				<Route
 					path="/"
 					element={<Home />}
+				/>
+				<Route
+					path="/create-post"
+					element={<CreatePost />}
 				/>
 
 				<Route

@@ -33,7 +33,7 @@ const Header: React.FC = () => {
 						{authStatus ? (
 							<>
 								<Link
-									to="/posts"
+									to="/create-post"
 									className="header-link"
 								>
 									create post
