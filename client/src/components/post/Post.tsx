@@ -1,31 +1,35 @@
 import React, { useState } from "react";
 import { UserInfo } from "../UserInfo";
 import { Link } from "react-router-dom";
-interface PostProps {
-	_id: string;
-	title: string;
-	createdAt: string;
-	imageUrl?: string;
-	user: UserInfo;
-	viewsCount: number;
-	commentsCount: number;
-	tags: string[];
-	children?: React.ReactNode;
-	isFullPost: boolean;
-	isLoading?: boolean;
-	isEditable?: boolean;
-}
+import { PostSkeleton } from "../../components/PostSkeleton";
 
-const Post: React.FC<PostProps> = (item) => {
+import { useDispatch, useSelector } from "react-redux";
+
+const Post: React.FC<PostProps> = ({
+	_id,
+	title,
+	createdAt,
+	imageUrl,
+	author,
+	viewCount,
+	tags,
+	children,
+	isFullPost,
+	isLoading,
+	isEditable,
+	content,
+	onClickRemove,
+}) => {
 	const [expanded, setExpanded] = useState(false);
 
-	const formattedDate = new Date(item.createdAt).toLocaleDateString("en-US", {
-		day: "numeric",
-		month: "long",
-		year: "numeric",
-	});
+	const formattedDate = createdAt
+		? new Date(createdAt).toLocaleDateString("en-US", {
+				day: "numeric",
+				month: "long",
+				year: "numeric",
+		  })
+		: "Invalid Date";
 
-	let content = item.content;
 	if (!content) {
 		content = "No content available";
 	}
@@ -36,42 +40,50 @@ const Post: React.FC<PostProps> = (item) => {
 		<p>{content.slice(0, 100)}...</p>
 	);
 
-	const toggleReadMore = () => {
-		setExpanded(!expanded);
+	const handleRemove = () => {
+		onClickRemove(_id);
 	};
 
-	const readMoreButton = expanded ? (
-		<button onClick={toggleReadMore}>Read less</button>
-	) : (
-		<button onClick={toggleReadMore}>Read more</button>
-	);
-	const onClickRemove = () => {
-		console.log("removed");
-	};
+	if (isLoading) {
+		return <PostSkeleton />;
+	}
 
 	return (
 		<div className="post-container">
-			{item.isEditable && (
+			{isEditable && (
 				<div className="edit-buttons">
-					<Link to={`/posts/${item._id}/edit`}>Edit</Link>
-
-					<button onClick={onClickRemove}>delete</button>
+					<Link to={`/posts/${_id}`}>Edit</Link>
+					<button onClick={handleRemove}>delete</button>{" "}
 				</div>
 			)}
 			<div>
-				<h2 className="title">{item.title}</h2>
-				{postContent} {readMoreButton}
+				{isFullPost ? (
+					<div>
+						<p> {title}</p>
+					</div>
+				) : (
+					<Link to={`/posts/${_id}`}>{title}</Link>
+				)}
 				<img
 					className="image-container"
-					src={item.imageUrl}
-					alt={item.title}
+					src={imageUrl}
+					alt={title}
 				/>
 			</div>
+
 			<div>
+				<div>
+					{" "}
+					{postContent}
+					<button onClick={() => setExpanded(!expanded)}>
+						{expanded ? "read less" : "read more"}
+					</button>
+				</div>
+
 				<div className="post-details">
-					<p className="author">{item.author}</p>
+					<p className="author">{author}</p>
 					<p className="time">{formattedDate}</p>
-					<p className="viewCount">Views: {item.viewCount}</p>
+					<p className="viewCount">Views: {viewCount}</p>
 				</div>
 			</div>
 		</div>
