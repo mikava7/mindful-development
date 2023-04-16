@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { UserInfo } from "../UserInfo";
 import { Link } from "react-router-dom";
 import { PostSkeleton } from "../../components/PostSkeleton";
-
+import { onsubmit } from "../../pages/CreatePost";
 import { useDispatch, useSelector } from "react-redux";
 
 const Post: React.FC<PostProps> = ({
@@ -21,7 +21,7 @@ const Post: React.FC<PostProps> = ({
 	onClickRemove,
 }) => {
 	const [expanded, setExpanded] = useState(false);
-
+	const dispatch = useDispatch();
 	const formattedDate = createdAt
 		? new Date(createdAt).toLocaleDateString("en-US", {
 				day: "numeric",
@@ -52,7 +52,7 @@ const Post: React.FC<PostProps> = ({
 		<div className="post-container">
 			{isEditable && (
 				<div className="edit-buttons">
-					<Link to={`/posts/${_id}`}>Edit</Link>
+					<Link to={`/posts/${_id}/edit`}>Edit</Link>
 					<button onClick={handleRemove}>delete</button>{" "}
 				</div>
 			)}
@@ -65,7 +65,6 @@ const Post: React.FC<PostProps> = ({
 					<Link to={`/posts/${_id}`}>{title}</Link>
 				)}
 				<img
-					className="image-container"
 					src={imageUrl}
 					alt={title}
 				/>

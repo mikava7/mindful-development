@@ -11,7 +11,7 @@ export const fetchLogin = createAsyncThunk("auth/fetchLogin", async (params) => 
 		return data;
 	} catch (error) {
 		// If an error occurs, log it to the console and re-throw the error
-		console.log("Error fetching posts:", error);
+		console.log(error.message || "cant login");
 		throw error;
 	}
 });
@@ -25,7 +25,7 @@ export const fetchRegister = createAsyncThunk("auth/fetchRegister", async (param
 		return data;
 	} catch (error) {
 		// If an error occurs, log it to the console and re-throw the error
-		console.log("Error fetching posts:", error);
+		console.log(error.message || "cant register");
 		throw error;
 	}
 });
@@ -39,7 +39,7 @@ export const fetchUserData = createAsyncThunk("auth/fetchUserData", async () => 
 		return data;
 	} catch (error) {
 		// If an error occurs, log it to the console and re-throw the error
-		console.log("Error fetching posts:", error);
+		console.log(error.message || "cant authenticate");
 		throw error;
 	}
 });

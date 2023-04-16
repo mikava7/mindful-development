@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import Form from "./components/Form";
-import Posts from "./components/post/Posts";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Header from "./components/Header";
 import CreatePost from "./pages/CreatePost";
+import FullPost from "./pages/FullPost";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData, selectAuthStatus } from "./redux/slices/auth.ts";
 import { Routes, Route } from "react-router-dom";
@@ -23,10 +23,6 @@ function App() {
 			<Header />
 			<Routes>
 				<Route
-					path="/header"
-					element={<Header />}
-				/>
-				<Route
 					path="/"
 					element={<Home />}
 				/>
@@ -36,12 +32,12 @@ function App() {
 				/>
 
 				<Route
-					path="/form"
-					element={<Form />}
+					path="/posts/:id"
+					element={<FullPost />}
 				/>
 				<Route
-					path="/posts"
-					element={<Posts />}
+					path="/posts/:id/edit"
+					element={<CreatePost />}
 				/>
 				<Route
 					path="/login"

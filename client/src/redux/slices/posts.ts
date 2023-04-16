@@ -11,10 +11,20 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
 		throw error;
 	}
 });
+
+export const deletePost = createAsyncThunk("posts/removePost", async (postId) => {
+	try {
+		await instance.delete(`/posts/${postId}`);
+		return postId;
+	} catch (error) {
+		console.log("Error removing post:", error);
+		throw error;
+	}
+});
+
 export const fetchTags = createAsyncThunk("posts/fetchTags", async () => {
 	try {
 		const { data } = await instance.get("/tags/last5");
-
 		return data;
 	} catch (error) {
 		console.log("Error fetching tags:", error);
@@ -62,8 +72,14 @@ const postSlice = createSlice({
 			.addCase(fetchTags.rejected, (state) => {
 				state.tags.items = [];
 				state.tags.status = "error";
+			})
+			.addCase(deletePost.fulfilled, (state, action) => {
+				state.posts.items = state.posts.items.filter((post) => post._id !== action.payload);
+				state.posts.status = "loaded";
 			});
 	},
 });
 
 export const postReducer = postSlice.reducer;
+
+export const selectPosts = (state) => state.postReducer.posts.items;

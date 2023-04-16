@@ -4,10 +4,12 @@ import { selectAuthStatus } from "../redux/slices/auth.ts";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import SimpleMDE from "react-simplemde-editor";
 import instance from "../axios.ts";
-import axios from "axios";
+import { useParams } from "react-router-dom";
+
 const CreatePost = () => {
 	const authStatus = useSelector(selectAuthStatus);
 	const navigate = useNavigate();
+	const { id } = useParams(); // extract id from URL params
 
 	const [content, setContent] = useState("");
 	const [title, setTitle] = useState("");
@@ -15,6 +17,9 @@ const CreatePost = () => {
 	const [imageUrl, setImageUrl] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const inputFileRef = useRef(null);
+	const [data, setData] = useState([]);
+
+	const isEditing = Boolean(id);
 
 	const handleChangeFile = async (event) => {
 		try {
@@ -24,9 +29,7 @@ const CreatePost = () => {
 
 			formData.append("image", file);
 
-			const response = await instance.post("/uploads/", formData, {
-				headers: { "Content-Type": "multipart/form-data" },
-			});
+			const response = await instance.post("/uploads", formData);
 
 			setImageUrl(response.data.url);
 		} catch (error) {
@@ -41,6 +44,29 @@ const CreatePost = () => {
 
 	const onChange = useCallback((value) => {
 		setContent(value);
+	}, []);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				if (id) {
+					const { data } = await instance.get(`/posts/${id}`);
+
+					setTitle(data.post.title);
+					setContent(data.post.content);
+					setImageUrl(data.post.imageUrl);
+					if (data.post && data.post.tags) {
+						setTags(data.post.tags.join(","));
+					}
+					console.log("res", data);
+				}
+			} catch (error) {
+				console.error(error);
+				alert("Failed to fetch post data.");
+			}
+		};
+
+		fetchData();
 	}, []);
 
 	const options = useMemo(
@@ -58,6 +84,7 @@ const CreatePost = () => {
 		[],
 	);
 	const token = localStorage.getItem("token");
+
 	const onSubmit = async (event) => {
 		event.preventDefault();
 		try {
@@ -69,16 +96,21 @@ const CreatePost = () => {
 				tags: tags.split(",").map((tag) => tag.trim()),
 			};
 
-			const { data } = await instance.post("/posts", fields, {});
+			const { data } = isEditing
+				? await instance.patch(`/posts/${id}`, fields)
+				: await instance.post("/posts", fields);
 
-			const id = data._id;
+			const _id = isEditing ? id : data._id;
 
-			navigate(`/posts/${id}`);
+			navigate(isEditing ? `/posts/${_id}` : `/`);
+
+			console.log("postCreation data", `/posts/${id}`);
 		} catch (error) {
 			console.warn(error);
 			alert("Error when created post");
 		}
 	};
+
 	return (
 		<section>
 			<button onClick={() => inputFileRef.current.click()}>Uploaded File</button>
@@ -111,16 +143,18 @@ const CreatePost = () => {
 				onChange={(e) => setTags(e.target.value)}
 			/>
 
-			<input
+			<SimpleMDE
 				value={content}
-				onChange={(e) => setContent(e.target.value)}
+				onChange={onChange}
+				options={options}
 			/>
+
 			<div className="buttons">
 				<button
 					type="submit"
 					onClick={onSubmit}
 				>
-					Create
+					{isEditing ? "Save" : "Create"}
 				</button>
 				<Link to="/">
 					<button>Cancel</button>
