@@ -47,13 +47,19 @@ const Post: React.FC<PostProps> = ({
 	if (isLoading) {
 		return <PostSkeleton />;
 	}
-
+console.log("author", imageUrl)
 	return (
 		<div className="post-container">
 			{isEditable && (
+				<div>
+
+				<p className="author">{author}</p>
+				<img src={author.imageUrl} alt={author} />
+				
 				<div className="edit-buttons">
 					<Link to={`/posts/${_id}/edit`}>Edit</Link>
 					<button onClick={handleRemove}>delete</button>{" "}
+				</div>
 				</div>
 			)}
 			<div>
@@ -72,6 +78,7 @@ const Post: React.FC<PostProps> = ({
 
 			<div>
 				<div>
+									<p className="author">{author}</p>
 					{" "}
 					{postContent}
 					<button onClick={() => setExpanded(!expanded)}>
@@ -80,7 +87,7 @@ const Post: React.FC<PostProps> = ({
 				</div>
 
 				<div className="post-details">
-					<p className="author">{author}</p>
+	
 					<p className="time">{formattedDate}</p>
 					<p className="viewCount">Views: {viewCount}</p>
 				</div>

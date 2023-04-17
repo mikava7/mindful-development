@@ -93,7 +93,7 @@ const CreatePost = () => {
 				title,
 				content,
 				imageUrl,
-				tags: tags.split(",").map((tag) => tag.trim()),
+				tags: tags.split(" ").map((tag) => tag.trim()),
 			};
 
 			const { data } = isEditing
@@ -110,7 +110,10 @@ const CreatePost = () => {
 			alert("Error when created post");
 		}
 	};
-
+	const onChangeTags = useCallback((event) => {
+		setTags(event.target.value);
+	  }, []);
+	  
 	return (
 		<section>
 			<button onClick={() => inputFileRef.current.click()}>Uploaded File</button>
@@ -137,11 +140,12 @@ const CreatePost = () => {
 				value={title}
 				onChange={(e) => setTitle(e.target.value)}
 			/>
-			<input
-				placeholder="Tags"
-				value={tags}
-				onChange={(e) => setTags(e.target.value)}
-			/>
+		<input
+  placeholder="Tags"
+  value={tags}
+  onChange={onChangeTags}
+/>
+
 
 			<SimpleMDE
 				value={content}
