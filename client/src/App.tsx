@@ -10,6 +10,7 @@ import FullPost from "./pages/FullPost";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData, selectAuthStatus } from "./redux/slices/auth.ts";
 import { Routes, Route } from "react-router-dom";
+import Products from "./components/Products";
 function App() {
 	const dispatch = useDispatch();
 	const authStatus = useSelector(selectAuthStatus);
@@ -47,6 +48,12 @@ function App() {
 					path="/register"
 					element={<Register />}
 				/>
+			<Route
+					path="/products"
+					element={<Products />}
+				/>
+			
+
 			</Routes>
 		</div>
 	);
