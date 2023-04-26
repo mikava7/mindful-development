@@ -8,8 +8,7 @@ import Products from "../components/Products";
 import Navbar from "../components/Navbar";
 import { fetchPosts, fetchTags, deletePost } from "../redux/slices/posts";
 import { fetchComments } from "../redux/slices/commentSlice";
-import { FlexContainer } from "../styled-component/styledComponents";
-
+import { FlexContainer, CardContainer } from "../styled-component/styledComponents";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -51,14 +50,14 @@ const Home = () => {
     : filteredPosts;
 
   return (
-    <FlexContainer flexDirection={'column'}>
+    <div >
  
       <div>
         {isPostsLoading ? (
           [Array(5)]
         ) : (
           postsToRender.map((obj, index) => (
-            <div key={index}>
+            <CardContainer key={index} >
               <Post
                 key={obj._id}
                 _id={obj._id}
@@ -77,7 +76,7 @@ const Home = () => {
                 postId={obj._id}
                 comments={comments.filter((comment) => comment.comment.post === obj._id)} // filter comments array to show only comments for this post
               />
-            </div>
+            </CardContainer>
           ))
         )}
       </div>
@@ -92,7 +91,7 @@ const Home = () => {
         />
       </div>
     
-    </FlexContainer>
+    </div>
   );
 };
 

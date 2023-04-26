@@ -18,20 +18,19 @@ const Navbar = () => {
   return (
     <Navigation>
 
-
-<HamburgerMenu onClick={toggleMenu}>
-<FontAwesomeIcon icon={faBars} />
-      </HamburgerMenu>
-      <SlideOutMenu style={{ transform: isOpen ? 'translateX(0)' : 'translateX(100%)' }}>
+        <HamburgerMenu onClick={toggleMenu}>
+                <FontAwesomeIcon icon={faBars} />
+        </HamburgerMenu>
+            <SlideOutMenu style={{ transform: isOpen ? 'translateX(0)' : 'translateX(100%)' }}>
             <Navigation maxWidth={'100px'}>
 
-                <StyledLink to='/' onClick={toggleMenu}><FontAwesomeIcon icon={faRss} />All Posts</StyledLink>
+                 <StyledLink to='/' onClick={toggleMenu}><FontAwesomeIcon icon={faRss} />All Posts</StyledLink>
                  <StyledLink to='/history' onClick={toggleMenu}><FontAwesomeIcon icon={faClockRotateLeft} />History</StyledLink>
                  <StyledLink to='/read-later' onClick={toggleMenu}><FontAwesomeIcon icon={faBookmark} />Read later</StyledLink>
                  <StyledLink to='/favorites' onClick={toggleMenu}><FontAwesomeIcon icon={faStar} />Favorites</StyledLink>
                  <StyledLink to='/login' onClick={toggleMenu}> <FontAwesomeIcon icon={faUser} />Login</StyledLink>
-                 <StyledLink to='/products' onClick={toggleMenu}><FontAwesomeIcon icon={faShop} />Store</StyledLink>
                  <StyledLink to='/register' onClick={toggleMenu}><FontAwesomeIcon icon={faUserPlus} />Register</StyledLink>
+                 <StyledLink to='/products' onClick={toggleMenu}><FontAwesomeIcon icon={faShop} />Store</StyledLink>
             </Navigation>
     </SlideOutMenu>
         

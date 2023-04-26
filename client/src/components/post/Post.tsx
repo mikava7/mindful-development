@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 import { PostSkeleton } from "../../components/PostSkeleton";
-
+import { FlexContainer,Title,Text, Button, ListItem } from "../../styled-component/styledComponents";
 interface PostProps {
   _id: string;
   title: string;
@@ -46,7 +47,7 @@ const Post: React.FC<PostProps> = ({
 
   // determine whether to display full content or truncated version
   const postContent = expanded ? (
-    <p className="content">{content}</p>
+    <Text className="content">{content}</Text>
   ) : (
     <p>{content.slice(0, 100)}...</p>
   );
@@ -72,29 +73,45 @@ const Post: React.FC<PostProps> = ({
       )}
       <div>
         {/* link to post details */}
-        <Link to={`/posts/${_id}`}>{title}</Link>
+      <Title>  <Link to={`/posts/${_id}`}>{title}</Link></Title>
         <img src={imageUrl} alt={title} />
       </div>
 
       <div>
         <div>
           {/* display truncated or full content */}
-          {postContent}
+        <Text> {postContent} </Text> 
           {/* button to toggle content truncation */}
-          <button onClick={() => setExpanded(!expanded)}>
+          {/* <button onClick={() => setExpanded(!expanded)}>
             {expanded ? "read less" : "read more"}
-          </button>
+          </button> */}
         </div>
 
-        <div className="post-details">
-          <p className="author">{author}</p>
-          {/* display formatted date */}
-          <p className="time">{formattedDate}</p>
-          <p className="viewCount">Views: {viewCount}</p>
-        </div>
+        <FlexContainer justifyContent={'space-around'} margin={'1rem'} border={'none'}>
+               <p >{author}</p>
+                <p >{formattedDate}</p>
+               <p >Views: {viewCount}</p>
+       
+        </FlexContainer>
+
+        
+         
+            <StyledLink to={`/posts/${_id}`}>Read more </StyledLink>
+        
+
       </div>
     </div>
   );
 };
 
 export default Post;
+
+const StyledLink = styled(Link)`
+      height:${(props)=> props.height || '30px'};
+    width:${(props)=> props.width || '30px'};
+    font-size:${(props)=> props.fontSize || '1.2rem'};
+    padding:${(props)=>props.padding || '0.5rem'};
+    width:100%;
+    border: none;
+    align-self:center;
+`
