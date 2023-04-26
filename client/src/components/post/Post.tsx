@@ -1,99 +1,100 @@
 import React, { useState } from "react";
-import { UserInfo } from "../UserInfo";
 import { Link } from "react-router-dom";
 import { PostSkeleton } from "../../components/PostSkeleton";
-import { onsubmit } from "../../pages/CreatePost";
-import { useDispatch, useSelector } from "react-redux";
+
+interface PostProps {
+  _id: string;
+  title: string;
+  createdAt: string | number | Date;
+  imageUrl: string;
+  author: string;
+  viewCount: number;
+  isLoading: boolean;
+  isEditable: boolean;
+  content: string;
+  onClickRemove: (id: string) => void;
+}
 
 const Post: React.FC<PostProps> = ({
-	_id,
-	title,
-	createdAt,
-	imageUrl,
-	author,
-	viewCount,
-	tags,
-	children,
-	isFullPost,
-	isLoading,
-	isEditable,
-	content,
-	onClickRemove,
+  _id,
+  title,
+  createdAt,
+  imageUrl,
+  author,
+  viewCount,
+  isLoading,
+  isEditable,
+  content,
+  onClickRemove,
 }) => {
-	const [expanded, setExpanded] = useState(false);
-	const dispatch = useDispatch();
-	const formattedDate = createdAt
-		? new Date(createdAt).toLocaleDateString("en-US", {
-				day: "numeric",
-				month: "long",
-				year: "numeric",
-		  })
-		: "Invalid Date";
+  // state to keep track of whether the post content should be expanded or not
+  const [expanded, setExpanded] = useState<boolean>(false);
 
-	if (!content) {
-		content = "No content available";
-	}
+  // format the date if it exists, otherwise display "Invalid Date"
+  const formattedDate = createdAt
+    ? new Date(createdAt).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "Invalid Date";
 
-	const postContent = expanded ? (
-		<p className="content">{content}</p>
-	) : (
-		<p>{content.slice(0, 100)}...</p>
-	);
+  // set default content if it doesn't exist
+  if (!content) {
+    content = "No content available";
+  }
 
-	const handleRemove = () => {
-		onClickRemove(_id);
-	};
+  // determine whether to display full content or truncated version
+  const postContent = expanded ? (
+    <p className="content">{content}</p>
+  ) : (
+    <p>{content.slice(0, 100)}...</p>
+  );
 
-	if (isLoading) {
-		return <PostSkeleton />;
-	}
-console.log("author", imageUrl)
-	return (
-		<div className="post-container">
-			{isEditable && (
-				<div>
+  // callback function to handle post removal
+  const handleRemove = () => {
+    onClickRemove(_id);
+  };
 
-				<p className="author">{author}</p>
-				<img src={author.imageUrl} alt={author} />
-				
-				<div className="edit-buttons">
-					<Link to={`/posts/${_id}/edit`}>Edit</Link>
-					<button onClick={handleRemove}>delete</button>{" "}
-				</div>
-				</div>
-			)}
-			<div>
-				{isFullPost ? (
-					<div>
-						<p> {title}</p>
-					</div>
-				) : (
-					<Link to={`/posts/${_id}`}>{title}</Link>
-				)}
-				<img
-					src={imageUrl}
-					alt={title}
-				/>
-			</div>
+  // display loading skeleton if post is still being loaded
+  if (isLoading) {
+    return <PostSkeleton />;
+  }
 
-			<div>
-				<div>
-									<p className="author">{author}</p>
-					{" "}
-					{postContent}
-					<button onClick={() => setExpanded(!expanded)}>
-						{expanded ? "read less" : "read more"}
-					</button>
-				</div>
+  return (
+    <div className="post-container">
+      {/* display edit buttons if post is editable */}
+      {isEditable && (
+        <div className="edit-buttons">
+          <Link to={`/posts/${_id}/edit`}>Edit</Link>
+          <button onClick={handleRemove}>delete</button>{" "}
+        </div>
+      )}
+      <div>
+        {/* link to post details */}
+        <Link to={`/posts/${_id}`}>{title}</Link>
+        <img src={imageUrl} alt={title} />
+      </div>
 
-				<div className="post-details">
-	
-					<p className="time">{formattedDate}</p>
-					<p className="viewCount">Views: {viewCount}</p>
-				</div>
-			</div>
-		</div>
-	);
+      <div>
+        <div>
+          {/* display truncated or full content */}
+          {postContent}
+          {/* button to toggle content truncation */}
+          <button onClick={() => setExpanded(!expanded)}>
+            {expanded ? "read less" : "read more"}
+          </button>
+        </div>
+
+        <div className="post-details">
+          <p className="author">{author}</p>
+          {/* display formatted date */}
+          <p className="time">{formattedDate}</p>
+          <p className="viewCount">Views: {viewCount}</p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Post;

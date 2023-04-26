@@ -11,6 +11,15 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
 		throw error;
 	}
 });
+export const updateViewCount = createAsyncThunk("posts/updateViewCount", async (postId) => {
+	try {
+	  const { data } = await instance.put(`/posts/${postId}`);
+	  return data;
+	} catch (error) {
+	  console.log("Error updating view count:", error);
+	  throw error;
+	}
+  });
 
 export const deletePost = createAsyncThunk("posts/removePost", async (postId) => {
 	try {
@@ -31,6 +40,8 @@ export const fetchTags = createAsyncThunk("posts/fetchTags", async () => {
 		throw error;
 	}
 });
+
+
 
 const initialState = {
 	posts: {
@@ -76,7 +87,12 @@ const postSlice = createSlice({
 			.addCase(deletePost.fulfilled, (state, action) => {
 				state.posts.items = state.posts.items.filter((post) => post._id !== action.payload);
 				state.posts.status = "loaded";
-			});
+			})
+			.addCase(updateViewCount.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.error.message;
+			  })
+			
 	},
 });
 
