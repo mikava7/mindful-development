@@ -57,7 +57,9 @@ const Home = () => {
           [Array(5)]
         ) : (
           postsToRender.map((obj, index) => (
-            <CardContainer key={index} >
+            <CardContainer 
+         
+            key={index} >
               <Post
                 key={obj._id}
                 _id={obj._id}
@@ -72,10 +74,10 @@ const Home = () => {
                 isEditable={userData?._id === obj.author?._id}
                 onClickRemove={() => onClickRemove(obj._id)}
               />
-              <Comments
+              {/* <Comments
                 postId={obj._id}
                 comments={comments.filter((comment) => comment.comment.post === obj._id)} // filter comments array to show only comments for this post
-              />
+              /> */}
             </CardContainer>
           ))
         )}

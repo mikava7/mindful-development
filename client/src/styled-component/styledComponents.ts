@@ -1,12 +1,15 @@
 import styled, { CSSProperties } from 'styled-components';
 import { lightTheme, darkTheme, theme  } from './theme.ts';
-
+import { Link } from 'react-router-dom';
 
 interface StyledComponentProps {
   display?: CSSProperties['display'];
   justifyContent?: CSSProperties['justifyContent'];
+  justifySelf?: CSSProperties['justifySelf'];
+
   alignItems?: CSSProperties['alignItems'];
   color?: CSSProperties['color'];
+
   flexDirection?: CSSProperties['flexDirection'];
   width?: CSSProperties['width'];
   height?: CSSProperties['height'];
@@ -24,48 +27,173 @@ interface StyledComponentProps {
 export const FlexContainer = styled.div<StyledComponentProps>`
   display: ${(props) => props.display || 'flex'};
   justify-content: ${(props) => props.justifyContent || 'center'};
+  justify-self: ${(props) => props.justifySelf || 'flex-start'};
   align-items: ${(props) => props.alignItems || 'center'};
   flex-direction: ${(props)=> props.flexDirection || 'row'};
-  max-width:${(props)=> props.width || '400px'};
+  max-width:${(props)=> props.maxWidth || '370px'};
+  width:${(props)=> props.width || '360px'};
   background-color: ${(props) => props.theme.colors.secondary};
-  margin:${(props)=> props.margin || '0'};
-  margin-left:${(props)=> props.marginLeft || '8px'};
+  margin:${(props)=> props.margin || ''};
+  margin-left:${(props)=> props.marginLeft || '1rem'};
   border-radius:${(props)=>props.borderRadius || '1rem'};
   color: ${(props) => props.theme.colors.text};
+span{
+  margin-left:0.5rem;
+}
+b{
 
+}
+@media only screen and (min-width: 480px) {
+
+  flex-direction: ${(props)=> props.flexDirection || 'row'};
+  justify-content: ${(props) => props.justifyContent || 'space-evenly'};
+  max-width:${(props)=> props.maxWidth || '768px'};
+  width:${(props)=> props.width || '70%'};
+
+  svg{
+
+    width: 50px;
+      font-size:'3rem';
+  }
+  p{
+      padding: 2rem;
+      width: 300px;
+      font-size:'3rem';
+
+    }
+
+  }
+  
+  @media only screen and (min-width: 768px) {
+
+    p{
+      padding: 2rem;
+      width: 300px;
+      font-size:'3rem';
+
+    }
+    flex-direction: ${(props) => props.flexDirection || 'row'};
+  font-size:'3rem';
+
+  }
 `;
-
-export const Title = styled.h1<StyledComponentProps>`
-     font-size:${(props)=>props.fontSize || "2rem"};
-      display: ${(props) => props.display || 'flex'};
-     justify-content: ${(props) => props.justifyContent || 'center'};
-  `;
-
-export const Text = styled.p<StyledComponentProps>`
-font-size:${(props)=>props.fontSize || "1.2rem"};
-display: ${(props) => props.display || 'flex'};
-justify-content: ${(props) => props.justifyContent || 'center'};
-
-`;
-
 export const CardContainer = styled.div<StyledComponentProps>`
     display: ${(props) => props.display || 'flex'};
   justify-content: ${(props) => props.justifyContent || 'center'};
   align-items: ${(props) => props.alignItems || 'center'};
   flex-direction: ${(props)=> props.flexDirection || 'column '};
-  max-width:${(props)=> props.width || '450px'};
+  max-width:${(props)=> props.maxWidth || '370px'};
+  width:${(props)=> props.width || '370px'};
+
   margin:${(props)=> props.margin || '1rem'};
   border-radius:${(props)=>props.borderRadius || '1rem'};
   background-color: ${(props) => props.theme.colors.secondary};
 
+
+  @media only screen and (min-width: 480px) {
+    max-width:${(props)=> props.maxWidth || '768px'};
+    width:${(props)=> props.width || '768px'};
+    display: ${(props) => props.display || 'flex'};
+
+  }
+
  `;
+
+ 
+export const Container = styled.div<StyledComponentProps>`
+display:flex;
+flex-direction:${(props) => props.flexDirection || "row"}; 
+justify-content: ${(props) => props.justifyContent || 'center'};
+width:${(props)=> props.width || '300px'};
+/* background-color: ${(props) => props.theme.colors.background}; */
+li{
+  margin-left:0.5rem;
+}
+span{
+  margin-left:0.5rem;
+  justify-content: ${(props) => props.justifyContent || 'flex-end'};
+  color: ${(props) => props.theme.colors.text};
+}
+@media only screen and (min-width: 480px) {
+  width:${(props)=> props.width || '668px'};
+
+
+  span{
+      font-size:1.5rem;
+      font-weight:bold;
+} 
+  img{
+    width: 350px;
+  }
+
+}
+`;
+
+export const ImageContainer = styled.div<StyledComponentProps>`
+display:flex;
+flex-direction:${(props) => props.flexDirection || "row"}; 
+justify-content: ${(props) => props.justifyContent || 'center'};
+width:${(props)=> props.width || '300px'};
+
+@media only screen and (min-width: 480px) {
+  width:${(props)=> props.width || '300px'};
+  justify-content: ${(props) => props.justifyContent || 'flex-start'};
+
+img{
+  width:${(props)=> props.width || '100%'};
+
+}
+  span{
+      font-size:1.5rem;
+      font-weight:bold;
+} 
+ 
+}
+`;
+
+
+export const Title = styled.h1<StyledComponentProps>`
+     font-size:${(props)=>props.fontSize || "2rem"};
+      display: ${(props) => props.display || 'flex'};
+     justify-content: ${(props) => props.justifyContent || 'center'};
+      color: ${(props) => props.theme.colors.text};
+
+      @media only screen and (min-width: 480px) {
+  a{
+    padding:1rem;
+    font-size:3.5rem;
+  };
+
+  }
+  `;
+export const Text = styled.p<StyledComponentProps>`
+font-size:${(props)=>props.fontSize || "1.2rem"};
+display: ${(props) => props.display || 'flex'};
+justify-content: ${(props) => props.justifyContent || 'center'};
+color: ${(props) => props.theme.colors.text};
+@media only screen and (min-width: 480px) {
+  p{
+
+    padding:1rem;
+    font-size:2.5rem;
+  }
+  }
+`;
 
 export const Navigation = styled.div<StyledComponentProps>`
     display: ${(props) => props.display || 'flex'};
     justify-content: ${(props) => props.justifyContent || 'flex-start'};
     align-items: ${(props) => props.alignItems || 'flex-start'};
+  margin-left:${(props)=> props.marginLeft || '1rem'};
     max-width:${(props)=> props.maxWidth || '350px'};
     flex-direction: ${(props)=> props.flexDirection || 'column'};
+
+  @media only screen and(min-width: 480px){
+    /* max-width:${(props)=> props.maxWidth || '678px'}; */
+    /* width:${(props)=> props.width || '660px'}; */
+
+
+  } 
 
 `;
 
@@ -81,7 +209,7 @@ export const SlideOutMenu = styled.div`
   top: 0;
   right: 0;
   bottom: 0;
-  width: 200px;
+  width: 280px;
   background-color: ${(props) => props.theme.colors.text};
   color: ${(props) => props.theme.colors.text};
   padding: 10px;
@@ -94,13 +222,38 @@ export const SlideOutMenu = styled.div`
 export const ListItem = styled.li<StyledComponentProps>`
     height:${(props)=> props.height || '30px'};
     width:${(props)=> props.width || '30px'};
-    font-size:${(props)=> props.fontSize || '2rem'};
-    align-items:center;
-    align-self: start;
+    font-size:${(props)=> props.fontSize || '1.2rem'};
+   color: ${(props) => props.theme.colors.text};
     list-style-type: none;
+    &:hover{
+   color: ${(props) => props.theme.colors.primary};
+
+    }
+    @media only screen and(min-width: 480px){
+      font-size:3rem;
+      padding:1rem;
+      margin-right:23rem;
+      width: 60px; 
+      svg{
+        font-size:3rem;
+      padding:1rem;
+      margin-right:3rem;
+      width: 60px;       } 
+    }
+ 
+`;
+export const StyledLink = styled(Link)<StyledComponentProps>`
+  font-size:1.2rem;
+  color: ${(props) => props.theme.colors.text};
+  font-size:${(props)=>props.fontSize || "1.2rem"};
+  @media only screen and (min-width: 480px) {
+      font-size:'3rem';
+      color:red;
+
+
+  }
 
 `;
-
 export const Button = styled.button<StyledComponentProps>`
     height:${(props)=> props.height || '30px'};
     width:${(props)=> props.width || '30px'};

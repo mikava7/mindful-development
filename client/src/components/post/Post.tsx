@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { PostSkeleton } from "../../components/PostSkeleton";
-import { FlexContainer,Title,Text, Button, ListItem } from "../../styled-component/styledComponents";
+import { FlexContainer,Title,Text, Button, ListItem, Container,StyledLink } from "../../styled-component/styledComponents";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBookmark, faStar,faPenToSquare,faTrash} from '@fortawesome/free-solid-svg-icons';
+
+;
 interface PostProps {
   _id: string;
   title: string;
@@ -30,6 +34,18 @@ const Post: React.FC<PostProps> = ({
 }) => {
   // state to keep track of whether the post content should be expanded or not
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [starred, setStarred] = useState<boolean>(false);
+  const [bookmarked, setBookmarked] = useState<boolean>(false);
+
+  // toggle the starred state when the star icon is clicked
+  const toggleColor = ()=>{
+    setStarred((prevColor)=> !prevColor)
+  }
+  const toggleBookmark = ()=>{
+    setBookmarked((prevColor)=> !prevColor)
+  }
+  const starColor = starred ? "gold" : "gray";
+  const bookmarkColor = bookmarked ? "gold" : "gray";
 
   // format the date if it exists, otherwise display "Invalid Date"
   const formattedDate = createdAt
@@ -63,55 +79,63 @@ const Post: React.FC<PostProps> = ({
   }
 
   return (
-    <div className="post-container">
+    <div>
       {/* display edit buttons if post is editable */}
       {isEditable && (
-        <div className="edit-buttons">
-          <Link to={`/posts/${_id}/edit`}>Edit</Link>
-          <button onClick={handleRemove}>delete</button>{" "}
-        </div>
+        <Container justifyContent="flex-end">
+          <StyledLink to={`/posts/${_id}/edit`}><FontAwesomeIcon icon={faPenToSquare} /></StyledLink>
+          <ListItem onClick={handleRemove}><FontAwesomeIcon icon={faTrash} /></ListItem>
+        </Container>
       )}
-      <div>
-        {/* link to post details */}
-      <Title>  <Link to={`/posts/${_id}`}>{title}</Link></Title>
-        <img src={imageUrl} alt={title} />
-      </div>
+      <Container flexDirection={"column"}>
 
-      <div>
-        <div>
-          {/* display truncated or full content */}
-        <Text> {postContent} </Text> 
-          {/* button to toggle content truncation */}
-          {/* <button onClick={() => setExpanded(!expanded)}>
-            {expanded ? "read less" : "read more"}
-          </button> */}
-        </div>
+          <Title> 
+            <StyledLink to={`/posts/${_id}`} fontSize={'2rem'}>{title} </StyledLink>
+          </Title>
+              
+          <Container justifyContent={"flex-end"} width={"80%"}>
 
-        <FlexContainer justifyContent={'space-around'} margin={'1rem'} border={'none'}>
-               <p >{author}</p>
-                <p >{formattedDate}</p>
-               <p >Views: {viewCount}</p>
+              <span >Views: {viewCount}</span>
+          </Container>
+      
+          <img src={imageUrl} alt={title} width={'250px'}/>
+      
+
        
-        </FlexContainer>
+        <Text> {postContent} </Text> 
 
-        
-         
-            <StyledLink to={`/posts/${_id}`}>Read more </StyledLink>
-        
+        <Container  flexDirection={"column"}>
 
-      </div>
+       
+              <Container>
+
+                      <Container justifyContent={"flex-start"}>    
+                           <b>{author}</b>
+                      </Container >
+
+                      <Container  >
+                          <p >{formattedDate}</p>
+                          <span onClick={toggleColor}
+                              >
+                            <FontAwesomeIcon icon={faStar} style={{ color: starColor }}/>
+                          </span>
+                          <span onClick={toggleBookmark}><FontAwesomeIcon icon={faBookmark} style={{ color: bookmarkColor }}/></span>
+                      </Container>
+        
+              </Container >
+
+              <Container justifyContent={"flex-end"}>
+                      <Link to={`/posts/${_id}`}>Read more </Link>
+              </Container>
+                 
+        </Container>
+
+      
+      </Container >
     </div>
   );
 };
 
 export default Post;
 
-const StyledLink = styled(Link)`
-      height:${(props)=> props.height || '30px'};
-    width:${(props)=> props.width || '30px'};
-    font-size:${(props)=> props.fontSize || '1.2rem'};
-    padding:${(props)=>props.padding || '0.5rem'};
-    width:100%;
-    border: none;
-    align-self:center;
-`
+

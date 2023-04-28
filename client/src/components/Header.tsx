@@ -1,8 +1,11 @@
 import React from "react";
+import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clearUserData, selectAuthStatus } from "../redux/slices/auth";
 import { RootState } from "../redux/store";
+import { clearUserData, selectAuthStatus } from "../redux/slices/auth";
+import { FlexContainer, Container,StyledLink } from "../styled-component/styledComponents";
+
 
 interface HeaderProps {}
 
@@ -23,25 +26,20 @@ const Header: React.FC<HeaderProps> = () => {
     }
   };
   return (
-    <div className="header-container">
-      <div className="header-content">
-        <h1 className="header-title">Header</h1>
-        <Link to="/products"> Products</Link>
-        <div className="header-links">
-          <Link to="/" className="header-link">
-            Home
-          </Link>
-          <div className="header-auth">
+    <div >
+      
+
+        
+          <FlexContainer width={'300px'}>
             {authStatus ? (
               <>
-                <Link
+                <StyledLink
                   to="/create-post"
-                  className="header-link"
                 >
                   create post
-                </Link>
+                </StyledLink>
                 <button
-                  className="header-button"
+            
                   onClick={onClickLogout}
                 >
                   Logout
@@ -49,20 +47,22 @@ const Header: React.FC<HeaderProps> = () => {
                 <p>{user.fullName}</p>
               </>
             ) : (
-              <>
-                <Link to="/login" className="header-link">
+              <Container width={'200px'} justifyContent="space-around">
+                <StyledLink to="/login" >
                   Login
-                </Link>
-                <Link to="/register" className="header-link">
+                </StyledLink>
+              
+                <StyledLink to="/register" >
                   Create account
-                </Link>
-              </>
+                </StyledLink>
+              </Container>
             )}
-          </div>
-        </div>
-      </div>
+          </FlexContainer>
+       
+      
     </div>
   );
 };
 
 export default Header;
+

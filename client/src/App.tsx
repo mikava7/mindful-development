@@ -14,7 +14,7 @@ import { Routes, Route } from "react-router-dom";
 import {lightTheme, darkTheme} from './styled-component/theme'
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from "./styled-component/globalStyle";
-import { FlexContainer, ListItem } from "./styled-component/styledComponents";
+import { FlexContainer, ListItem , Container} from "./styled-component/styledComponents";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon } from '@fortawesome/free-solid-svg-icons';
 import { faMoon as farMoon } from "@fortawesome/free-regular-svg-icons";
@@ -32,15 +32,19 @@ function App() {
 	return (
 <ThemeProvider theme = { theme === "light" ? lightTheme : darkTheme } >
 			
-			<FlexContainer justifyContent={'space-around'} margin={'0.5rem'}>
-			<Navbar />
-			<ListItem onClick={toggleTheme}>
-          {theme === "dark" ? (
-            <FontAwesomeIcon icon={farMoon} className="fa-thin" />
-          ) : (
-            <FontAwesomeIcon icon={faMoon} className="fa-duotone" />
-          )}
-        </ListItem>
+			<FlexContainer justifyContent={'space-around'} margin={'1rem'}>
+			<Navbar  />
+			<Container flexDirection={"row"}>
+					<Header/>
+			</Container>
+			<ListItem onClick={toggleTheme} style={{marginRight: "2rem"}}>
+  {theme === "dark" ? (
+    <FontAwesomeIcon icon={farMoon} className="fa-thin" />
+  ) : (
+    <FontAwesomeIcon icon={faMoon} className="fa-duotone" />
+  )}
+</ListItem>
+
 			</FlexContainer>
 			<GlobalStyle/>
 

@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRegister, selectAuthStatus } from "../redux/slices/auth.ts";
@@ -16,9 +17,7 @@ const Registration: React.FC = () => {
 		reset,
 	} = useForm({
 		defaultValues: {
-			fullName: "Irakli",
-			email: "ira@example.com",
-			password: "1234qwer",
+	
 		},
 	});
 
@@ -39,7 +38,7 @@ const Registration: React.FC = () => {
 	}
 
 	return (
-		<section>
+		<RegistrationContainer>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<h2>create account</h2>
 				<input
@@ -62,14 +61,49 @@ const Registration: React.FC = () => {
 				/>
 
 				<button
-					// disabled={isValid}
 					type="submit"
 				>
 					Register
 				</button>
 			</form>
-		</section>
+		</RegistrationContainer>
 	);
 };
 
 export default Registration;
+
+const RegistrationContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    input {
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #4267B2;
+      font-size: 1rem;
+      width: 100%;
+    }
+    
+    button {
+      background-color: #4267B2;
+      color: #fff;
+      border-radius: 0.25rem;
+      border: none;
+      font-size: 1rem;
+      padding: 0.5rem;
+      width: 100%;
+    }
+  }
+`;

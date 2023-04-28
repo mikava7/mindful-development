@@ -3,14 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectAuthStatus } from "../redux/slices/auth.ts";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import SimpleMDE from "react-simplemde-editor";
+
 import instance from "../axios.ts";
 import { useParams } from "react-router-dom";
+import styled from "styled-components";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faImage,faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const CreatePost = () => {
 	const authStatus = useSelector(selectAuthStatus);
 	const navigate = useNavigate();
 	const { id } = useParams(); // extract id from URL params
-
 	const [content, setContent] = useState("");
 	const [title, setTitle] = useState("");
 	const [tags, setTags] = useState("");
@@ -72,9 +75,9 @@ const CreatePost = () => {
 	const options = useMemo(
 		() => ({
 			spellChecker: false,
+			textarea: true,
 			maxHeight: "100px",
 			autofocus: true,
-			placeholder: "Enter your text",
 			status: false,
 			autosave: {
 				enabled: true,
@@ -115,37 +118,37 @@ const CreatePost = () => {
 	  }, []);
 	  
 	return (
-		<section>
-			<button onClick={() => inputFileRef.current.click()}>Uploaded File</button>
+		<Container>
+			<div onClick={() => inputFileRef.current.click()}>Upload <FontAwesomeIcon icon={faImage} /> </div>
 			<input
 				ref={inputFileRef}
 				type="file"
 				onChange={handleChangeFile}
 				hidden
 			/>
+
 			{imageUrl && (
-				<div>
-					<button onClick={onClickRemoveImage}>Delete</button>
+				<Container>
 					<img
 						src={`http://localhost:5000${imageUrl}`}
 						alt="Uploaded"
 					/>
-				</div>
+					<div style={{marginTop:"1rem"}} onClick={onClickRemoveImage}>Delete  <FontAwesomeIcon icon={faTrash} /></div>
+				</Container>
 			)}
 			<br />
 
-			<input
+			<Input
 				type="text"
 				placeholder="Title"
 				value={title}
 				onChange={(e) => setTitle(e.target.value)}
 			/>
-		<input
-  placeholder="Tags"
-  value={tags}
-  onChange={onChangeTags}
-/>
-
+			<Input
+ 				placeholder="Tags"
+  				value={tags}
+  				onChange={onChangeTags}
+			/>
 
 			<SimpleMDE
 				value={content}
@@ -164,7 +167,31 @@ const CreatePost = () => {
 					<button>Cancel</button>
 				</Link>
 			</div>
-		</section>
+		</Container>
 	);
 };
 export default CreatePost;
+
+const Container = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  width: 100%;
+`;
+const Input = styled.input`
+  width: 100%;
+  margin: 1rem;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+const SimpleMDEWrapper = styled.div`
+  width: 100%;
+  max-width: 500px;
+  margin: 8px 0;
+  .CodeMirror {
+    height: 200px;
+    overflow-y: scroll;
+\ }
+`;
