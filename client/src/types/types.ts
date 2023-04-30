@@ -1,16 +1,15 @@
-export interface PostType {
+export interface PostProps {
 	_id: string;
 	title: string;
+	createdAt: string | number | Date;
+	imageUrl: string;
 	author: string;
-	content: string;
-	category?: string;
-	tags?: string[];
 	viewCount: number;
-	imageUrl?: string;
-	createdAt: string;
-	updatedAt: string;
-}
-
+	isLoading: boolean;
+	isEditable: boolean;
+	content: string;
+	onClickRemove: (id: string) => void;
+  }
 export interface UserType {
 	_id: string;
 	username: string;

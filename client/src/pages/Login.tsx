@@ -2,30 +2,27 @@ import React,{useEffect} from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLogin, selectAuthStatus, selectAuthError } from "../redux/slices/auth.ts";
+import { fetchLogin, selectAuthStatus  } from "../redux/slices/auth.ts";
 import { Navigate } from "react-router-dom";
 
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = () => {
-	const authError = useSelector(selectAuthError);
 	const authStatus = useSelector(selectAuthStatus);
-	const dispatch = useDispatch();
 
+	const dispatch = useDispatch();
+	
 	const {
 		register,
 		handleSubmit,
-		setError,
 		formState: { errors, isValid },
-		reset,
 	} = useForm({
 		defaultValues: {
-			email: "name@example.com",
-			password: "1234qwer",
+			email: "qwer@example.com",
+			password: "12345",
 		},
 	});
 
-	// Submit the login form
 	const onSubmit = async (values) => {
 		// Call the fetchUserData action creator and wait for the response
 		const data = await dispatch(fetchLogin(values));
@@ -39,16 +36,7 @@ const Login: React.FC<LoginProps> = () => {
 		}
 	};
 
-	// Handle errors from the auth slice
-	useEffect(() => {
-		if (authError) {
-			setError("auth", {
-				type: "manual",
-				message: authError.message,
-			});
-			reset({ ...errors, password: "" });
-		}
-	}, [authError]);
+
 
 	if (authStatus) {
 		return <Navigate to="/" />;
@@ -78,8 +66,6 @@ const Login: React.FC<LoginProps> = () => {
 						{...register("password", { required: "Enter password" })}
 					/>
 				</label>
-				{errors.password && <p>{errors.password.message}</p>}
-				{errors.auth && <p>{errors.auth.message}</p>}
 				<button type="submit">Login</button>
 			</form>
 		</LoginForm>
@@ -87,6 +73,8 @@ const Login: React.FC<LoginProps> = () => {
 };
 
 export default Login;
+
+
 const LoginForm = styled.div`
   display: flex;
   flex-direction: column;

@@ -13,8 +13,7 @@ const Header: React.FC<HeaderProps> = () => {
   const authStatus = useSelector((state: RootState) => selectAuthStatus(state));
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.data);
-  console.log("user", user);
-  console.log("authStatus", authStatus);
+
 
   const onClickLogout = () => {
     // Prompt the user to confirm they want to log out
@@ -23,6 +22,7 @@ const Header: React.FC<HeaderProps> = () => {
       dispatch(clearUserData());
       // Remove the token from local storage
       window.localStorage.removeItem("token");
+
     }
   };
   return (
