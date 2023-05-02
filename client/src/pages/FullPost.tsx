@@ -2,35 +2,41 @@ import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import Post from '../components/post/Post'
 import { useDispatch, useSelector } from 'react-redux'
-import { deletePost, updateViewCount } from '../redux/slices/posts'
+import { deletePost, updateViewCount, fetchPosts } from '../redux/slices/posts'
+import { VisitedPosts } from '../redux/slices/auth'
 import { fetchComments } from '../redux/slices/commentSlice'
 
 import ReactMarkdown from 'react-markdown'
 import Comments from './Comments.js'
 
 const FullPost: React.FC = () => {
-  // Get the Redux dispatch function
   const dispatch = useDispatch()
-
-  // Get the post ID from the URL params using the `useParams` hook
   const { id } = useParams()
-
-  // Get the posts and user data from the Redux store using the `useSelector` hook
+  console.log('id', id)
   const { posts } = useSelector((state) => state.posts) || {}
-  const userData = useSelector((state) => state.auth.data) || {}
+  const userId = useSelector((state) => state.auth.data) || {}
+  const comments = useSelector((state) => state.comments.comments) || {}
+
+  console.log('userData in fulPost', userId)
 
   // Extract the post with the matching ID from the `posts` array
   const post = Array.isArray(posts.items)
     ? posts.items.find((p) => p._id === id)
     : null
 
-  // Get the comments for this post from the Redux store using the `useSelector` hook
-  const comments = useSelector((state) => state.comments.comments) || {}
-
-  // Dispatch the `fetchComments` action to load the comments for this post when the component mounts
   useEffect(() => {
     dispatch(fetchComments(id))
   }, [dispatch, id])
+
+  useEffect(() => {
+    dispatch(fetchPosts())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(VisitedPosts(id))
+    }
+  }, [dispatch, id, userId])
 
   // Dispatch the `updateViewCount` action to increment the view count for this post when the component mounts
   useEffect(() => {
@@ -66,7 +72,7 @@ const FullPost: React.FC = () => {
             author={post.author.fullName}
             viewCount={post.viewCount}
             tags={post.tags}
-            isEditable={userData?._id === post.author._id}
+            // Pass the `onClickRemove` callback function to the `Post` component
             onClickRemove={onClickRemove}
           />
 

@@ -34,7 +34,6 @@ export const updateViewCount = createAsyncThunk(
     }
   }
 )
-
 export const deletePost = createAsyncThunk(
   'posts/removePost',
   async (postId) => {
@@ -73,6 +72,7 @@ export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
 const initialState = {
   posts: {
     items: [],
+
     status: 'loading',
   },
   tags: {
@@ -84,7 +84,7 @@ const initialState = {
 const postSlice = createSlice({
   name: 'posts',
   initialState,
-  reducer: {},
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchPosts.pending, (state) => {
