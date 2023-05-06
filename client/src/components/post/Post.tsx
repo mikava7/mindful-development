@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { PostSkeleton } from '../../components/PostSkeleton'
+import axios from '../../axios'
 import {
-  FlexContainer,
   Title,
   Text,
   Button,
@@ -20,6 +20,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { addFavorite, removeFavorite } from '../../redux/slices/favoriteSlice'
 import { removeStarredId, addStarredId } from '../../redux/slices/favoriteSlice'
+import { addPostReaction, removePostReaction } from '../../redux/slices/posts'
+import Reactions from '../Reactions'
+import { fetchUserData } from '../../redux/slices/auth'
 interface PostProps {
   _id: string
   title: string
@@ -42,13 +45,33 @@ const Post: React.FC<PostProps> = ({
   isLoading,
   isEditable,
   content,
-
   onClickRemove,
 }) => {
   const postId = _id
   const dispatch = useDispatch()
   const starredIds = useSelector((state) => state.favorites.starredIds) || []
   const [starred, setStared] = useState(starredIds.includes(postId))
+  const userData = useSelector((state) => state.auth.data) || {}
+  const userId = userData?._id
+
+  const { posts } = useSelector((state) => state.posts) || {}
+
+  const likes = posts?.items.find((post) => post._id === postId)?.reactedBy
+
+  const [isLiked, setIsLiked] = useState(likes ? likes.includes(userId) : false)
+
+  const handleLikeClick = () => {
+    setIsLiked(true)
+    dispatch(addPostReaction(postId))
+  }
+  const handleUnlikeClick = () => {
+    setIsLiked(false)
+    dispatch(removePostReaction(postId))
+  }
+
+  useEffect(() => {
+    fetchUserData()
+  }, [dispatch])
 
   useEffect(() => {
     localStorage.setItem('starredIds', JSON.stringify(starredIds))
@@ -65,9 +88,9 @@ const Post: React.FC<PostProps> = ({
 
   const handleToggleFavorite = () => {
     if (starred) {
-      dispatch(removeFavorite(postId))
+      dispatch(removeFavorite(userId))
     } else {
-      dispatch(addFavorite(postId))
+      dispatch(addFavorite(userId))
     }
   }
   const handleStarAndFavoriteClick = () => {
@@ -122,7 +145,7 @@ const Post: React.FC<PostProps> = ({
 
         <img src={imageUrl} alt={title} width={'250px'} />
 
-        <Text> {content} </Text>
+        <Text>{content.slice(0, 100)}...</Text>
 
         <Container flexDirection={'column'}>
           <Container>
@@ -146,6 +169,11 @@ const Post: React.FC<PostProps> = ({
               </span>
             </Container>
           </Container>
+          <div>
+            {!isLiked && <button onClick={handleLikeClick}>like</button>}
+            {isLiked && <button onClick={handleUnlikeClick}>liked</button>}
+            <p>{likes ? likes.length : 0} likes</p>
+          </div>
 
           <Container justifyContent={'flex-end'}>
             <Link to={`/posts/${_id}`}>Read more </Link>

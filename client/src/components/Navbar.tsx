@@ -46,9 +46,9 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faClockRotateLeft} />
             History
           </StyledLink>
-          <StyledLink to="/read-later" onClick={toggleMenu}>
+          <StyledLink to="/user-info" onClick={toggleMenu}>
             <FontAwesomeIcon icon={faBookmark} />
-            Read later
+            User Info
           </StyledLink>
           <StyledLink to="/favorites" onClick={toggleMenu}>
             <FontAwesomeIcon icon={faStar} />

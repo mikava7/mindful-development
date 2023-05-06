@@ -19,6 +19,8 @@ export const addFavorite = createAsyncThunk(
   'favorites/addFavorite',
   async (postId, { getState }) => {
     const { data } = getState().auth
+    console.log('data', data)
+    console.log('data id', data.id)
 
     try {
       const response = await axios.post(`/posts/favorites/${postId}`, {

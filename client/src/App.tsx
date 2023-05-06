@@ -10,6 +10,7 @@ import History from './pages/History'
 import Navbar from './components/Navbar'
 import ReadLater from './components/ReadLater'
 import Favorites from './components/Favorites'
+import UserPage from './pages/UserPage'
 import { Routes, Route } from 'react-router-dom'
 import { lightTheme, darkTheme } from './styled-component/theme'
 import { ThemeProvider } from 'styled-components'
@@ -52,11 +53,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/navbar" element={<Navbar />} />
           <Route path="/create-post" element={<CreatePost />} />
-
           <Route path="/posts/:id" element={<FullPost />} />
           <Route path="/posts/:id/edit" element={<CreatePost />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/user-info" element={<UserPage />} />
+
           <Route path="/products" element={<Products />} />
           <Route path="/history" element={<History />} />
           <Route path="/read-later" element={<ReadLater />} />

@@ -8,7 +8,6 @@ export const fetchLogin = createAsyncThunk(
     try {
       // Make a POST request to the /auth/login endpoint with the provided params
       const { data } = await axios.post('/auth/login', params)
-
       // Return the fetched data
       return data
     } catch (error) {
@@ -41,10 +40,9 @@ export const fetchUserData = createAsyncThunk(
   async () => {
     try {
       // Make a POST request to the /auth/login endpoint with the provided params
-      const { data } = await axios.get('/auth/user-info')
-
-      // Return the fetched data
-      return data
+      const response = await axios.get('/auth/user-info')
+      const user = response.data
+      return user
     } catch (error) {
       // If an error occurs, log it to the console and re-throw the error
       console.log(error.message || 'cant authenticate')
@@ -52,6 +50,7 @@ export const fetchUserData = createAsyncThunk(
     }
   }
 )
+
 export const VisitedPosts = createAsyncThunk(
   'posts/VisitedPosts',
   async (userId) => {
@@ -71,7 +70,7 @@ export const getVisitedPosts = createAsyncThunk(
   'posts/getVisitedPosts',
   async (_, { getState }) => {
     try {
-      console.log('get visited', getState().auth.data) // Add this line to check the value being returned
+      // console.log('get visited', getState().auth.data) // Add this line to check the value being returned
       const { data } = await axios.get(
         `/auth/${getState().auth.data._id}/history`
       )
@@ -102,6 +101,7 @@ export const clearHistory = createAsyncThunk(
 
 const initialState = {
   data: JSON.parse(localStorage.getItem('selectAuthStatus')) || null,
+  user: null,
   VisitedPosts: [],
   status: 'loading',
 }
@@ -132,12 +132,11 @@ const authSlice = createSlice({
         state.data = action.payload
 
         // Set the authData in localStorage
-        if (state.data && 'token' in state.data && '_id' in state.data) {
+        if (state.data && 'token' in state.data) {
           window.localStorage.setItem(
             'selectAuthStatus',
             JSON.stringify(state.data.token)
           )
-          window.localStorage.setItem('userId', JSON.stringify(state.data._id))
         }
       })
       .addCase(fetchLogin.rejected, (state) => {
@@ -149,17 +148,17 @@ const authSlice = createSlice({
       .addCase(fetchUserData.pending, (state) => {
         // When the async thunk is pending, set the status to "loading" and clear any existing data
         state.status = 'loading'
-        state.data = null
+        state.user = null
       })
       .addCase(fetchUserData.fulfilled, (state, action) => {
         // When the async thunk is fulfilled, set the status to "loaded" and update the data with the fetched data
         state.status = 'loaded'
-        state.data = action.payload
+        state.user = action.payload
       })
       .addCase(fetchUserData.rejected, (state) => {
         // When the async thunk is rejected, set the status to "error" and clear any existing data
         state.status = 'error'
-        state.data = null
+        state.user = null
       })
       .addCase(fetchRegister.pending, (state) => {
         // When the async thunk is pending, set the status to "loading" and clear any existing data
@@ -207,6 +206,7 @@ const authSlice = createSlice({
 })
 
 export const selectAuthStatus = (state) => Boolean(state.auth.data)
+export const selectAuthData = (state) => state.auth.data
 
 export const { clearUserData, clearVisitedPosts } = authSlice.actions
 

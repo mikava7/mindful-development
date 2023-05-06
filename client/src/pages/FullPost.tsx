@@ -12,16 +12,16 @@ import Comments from './Comments.js'
 const FullPost: React.FC = () => {
   const dispatch = useDispatch()
   const { id } = useParams()
-  console.log('id', id)
   const { posts } = useSelector((state) => state.posts) || {}
   const userId = useSelector((state) => state.auth.data) || {}
   const comments = useSelector((state) => state.comments.comments) || {}
 
-  console.log('userData in fulPost', userId)
+  // console.log('id', id)
+  // console.log('userData in fulPost', userId)
 
   // Extract the post with the matching ID from the `posts` array
   const post = Array.isArray(posts.items)
-    ? posts.items.find((p) => p._id === id)
+    ? posts.items.find((post) => post._id === id)
     : null
 
   useEffect(() => {

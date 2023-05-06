@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faImage, faTrash } from '@fortawesome/free-solid-svg-icons'
-
+import ImageUpload from '../components/imageUpload'
 const CreatePost = () => {
   const authStatus = useSelector(selectAuthStatus)
   const navigate = useNavigate()
@@ -24,24 +24,11 @@ const CreatePost = () => {
 
   const isEditing = Boolean(id)
 
-  const handleChangeFile = async (event) => {
-    try {
-      const file = event.target.files[0]
-
-      const formData = new FormData()
-
-      formData.append('image', file)
-
-      const response = await instance.post('/uploads', formData)
-
-      setImageUrl(response.data.url)
-    } catch (error) {
-      console.error(error)
-      alert('File upload error')
-    }
+  const handleImageUpload = (imageUrl) => {
+    setImageUrl(imageUrl)
   }
 
-  const onClickRemoveImage = () => {
+  const handleImageRemove = () => {
     setImageUrl('')
   }
 
@@ -105,9 +92,9 @@ const CreatePost = () => {
 
       const _id = isEditing ? id : data._id
 
-      navigate(isEditing ? '/' : `//posts/${id}`)
+      navigate('/')
 
-      console.log('postCreation data', `/posts/${id}`)
+      // console.log('postCreation data', `/posts/${id}`)
     } catch (error) {
       console.warn(error)
       alert('Error when created post')
@@ -119,16 +106,13 @@ const CreatePost = () => {
 
   return (
     <Container>
-      <div onClick={() => inputFileRef.current.click()}>
-        Upload <FontAwesomeIcon icon={faImage} />{' '}
+      <div>
+        <ImageUpload
+          onImageUpload={handleImageUpload}
+          onImageRemove={handleImageRemove}
+          imageUrl={imageUrl}
+        />
       </div>
-      <input
-        ref={inputFileRef}
-        type="file"
-        onChange={handleChangeFile}
-        hidden
-      />
-
       {imageUrl && (
         <Container>
           <img src={`http://localhost:5000${imageUrl}`} alt="Uploaded" />
@@ -183,5 +167,5 @@ const SimpleMDEWrapper = styled.div`
   .CodeMirror {
     height: 200px;
     overflow-y: scroll;
-\ }
+  }
 `

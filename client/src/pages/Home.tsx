@@ -8,6 +8,7 @@ import Products from '../components/Products'
 import Navbar from '../components/Navbar'
 import { fetchPosts, fetchTags, deletePost } from '../redux/slices/posts'
 import { fetchComments } from '../redux/slices/commentSlice'
+import { fetchUserData } from '../redux/slices/auth'
 import {
   FlexContainer,
   CardContainer,
@@ -18,12 +19,19 @@ const Home = () => {
 
   const [reset, setReset] = useState(false)
   const { posts, tags } = useSelector((state) => state.posts) || {}
-  const userData = useSelector((state) => state.auth.data) || {}
+  const userData = useSelector((state) => state.auth.user) || {}
+  // const userId = userData?._id
+  // console.log('userData', userData)
+  // console.log('userId', userId)
   const isPostsLoading = posts.status === 'loading'
   const isTagsLoading = tags.status === 'loading'
   const comments = useSelector((state) => state.comments.comments)
 
   const [selectedTag, setSelectedTag] = useState(null)
+
+  useEffect(() => {
+    dispatch(fetchUserData())
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(fetchPosts())
