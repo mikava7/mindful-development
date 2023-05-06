@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import instance from '../../axios'
+import Reactions from '../../components/Reactions'
+import { selectAuthData } from './auth'
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   try {
@@ -10,6 +12,7 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
     throw error
   }
 })
+
 export const fetchSinglePosts = createAsyncThunk(
   'posts/fetchSinglePosts',
   async () => {
@@ -22,6 +25,7 @@ export const fetchSinglePosts = createAsyncThunk(
     }
   }
 )
+
 export const updateViewCount = createAsyncThunk(
   'posts/updateViewCount',
   async (postId) => {
@@ -34,6 +38,7 @@ export const updateViewCount = createAsyncThunk(
     }
   }
 )
+
 export const deletePost = createAsyncThunk(
   'posts/removePost',
   async (postId) => {
@@ -69,10 +74,42 @@ export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
   }
 })
 
+export const addPostReaction = createAsyncThunk(
+  'posts/addPostReaction',
+  async (postId, { getState }) => {
+    try {
+      const userId = selectAuthData(getState())?._id
+
+      const response = await instance.put(`/likePost/${postId}`, {})
+
+      return { postId, userId }
+    } catch (error) {
+      console.log('Error adding post reaction:', error)
+      throw error
+    }
+  }
+)
+
+export const removePostReaction = createAsyncThunk(
+  'posts/removePostReaction',
+  async (postId, { getState }) => {
+    try {
+      const userId = selectAuthData(getState())?._id
+
+      const response = await instance.delete(`/unlikePost/${postId}`)
+
+      return { postId, userId }
+    } catch (error) {
+      console.log('Error removing post reaction:', error)
+      throw error
+    }
+  }
+)
 const initialState = {
   posts: {
     items: [],
-
+    reactedBy: [],
+    favorites: [],
     status: 'loading',
   },
   tags: {
@@ -120,6 +157,47 @@ const postSlice = createSlice({
       .addCase(updateViewCount.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
+      })
+      .addCase(addPostReaction.pending, (state) => {
+        state.posts.status = 'loading'
+      })
+      .addCase(addPostReaction.fulfilled, (state, action) => {
+        state.posts.status = 'loaded'
+
+        const { postId, userId } = action.payload
+        const postIndex = state.posts.items.findIndex(
+          (post) => post._id === postId
+        )
+        if (
+          postIndex !== -1 &&
+          !state.posts.items[postIndex].reactedBy.includes(userId)
+        ) {
+          state.posts.items[postIndex].reactedBy.push(userId)
+        }
+      })
+      .addCase(addPostReaction.rejected, (state, action) => {
+        state.posts.error = action.error.message
+        state.posts.status = 'failed'
+      })
+      .addCase(removePostReaction.pending, (state) => {
+        state.posts.status = 'loading'
+      })
+      .addCase(removePostReaction.fulfilled, (state, action) => {
+        state.posts.status = 'loaded'
+
+        const { postId, userId } = action.payload
+        const postIndex = state.posts.items.findIndex(
+          (post) => post._id === postId
+        )
+        if (postIndex !== -1) {
+          state.posts.items[postIndex].reactedBy = state.posts.items[
+            postIndex
+          ].reactedBy.filter((id) => id !== userId)
+        }
+      })
+      .addCase(removePostReaction.rejected, (state, action) => {
+        state.posts.error = action.error.message
+        state.posts.status = 'failed'
       })
   },
 })
