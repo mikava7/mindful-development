@@ -2,14 +2,17 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchRegister, selectAuthStatus } from '../redux/slices/auth.ts'
-import { Navigate } from 'react-router-dom'
+import { editUserInfo } from '../redux/slices/auth'
 import ImageUpload from '../components/imageUpload'
+import { useNavigate } from 'react-router-dom'
 
-const Registration: React.FC = () => {
-  const authStatus = useSelector(selectAuthStatus)
+const EditUserInfoForm: React.FC = () => {
   const dispatch = useDispatch()
-  const [imageUrl, setImageUrl] = useState('')
+  const navigate = useNavigate()
+
+  const currentUser = useSelector((state) => state.auth.user)
+  console.log('currentUser', currentUser)
+  const [imageUrl, setImageUrl] = useState(currentUser.imageUrl)
 
   const handleImageUpload = (imageUrl) => {
     setImageUrl(imageUrl)
@@ -26,33 +29,35 @@ const Registration: React.FC = () => {
     formState: { errors, isValid },
     reset,
   } = useForm({
-    defaultValues: {},
+    defaultValues: {
+      fullName: currentUser.fullName,
+      email: currentUser.email,
+    },
   })
 
-  // Submit the register form
+  // Submit the edit user info form
   const onSubmit = async (values) => {
     // Add the imageUrl to the values object
     values.imageUrl = imageUrl
 
-    // Call the fetchUserData action creator and wait for the response
-    const data = await dispatch(fetchRegister(values))
-    // console.log('data in register', data)
-    if (data.payload && 'token' in data.payload) {
-      window.localStorage.setItem('token', data.payload.token)
+    // Call the editUserInfo action creator and wait for the response
+    const data = await dispatch(editUserInfo(values))
+
+    if (data.payload && data.payload.success) {
+      // If the update was successful, reset the form and show a success message
+      reset()
+      alert('User information updated successfully.')
+      navigate('/user-info')
     } else {
       // Otherwise, show an error message
-      alert('Invalid email or password. Please try again.')
+      alert('Cannot update user information. Please try again.')
     }
   }
 
-  if (authStatus) {
-    return <Navigate to="/" />
-  }
-
   return (
-    <RegistrationContainer>
+    <EditUserInfoContainer>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h2>create account</h2>
+        <h2>Edit User Information</h2>
         <input
           className="field"
           label="Name"
@@ -65,12 +70,6 @@ const Registration: React.FC = () => {
           placeholder="Enter email"
           {...register('email', { required: 'Enter email' })}
         />
-        <input
-          className="field"
-          label="password"
-          placeholder="Enter password"
-          {...register('password', { required: 'Enter password' })}
-        />
 
         <ImageUpload
           onImageUpload={handleImageUpload}
@@ -78,15 +77,15 @@ const Registration: React.FC = () => {
           imageUrl={imageUrl}
         />
 
-        <button type="submit">Register</button>
+        <button type="submit">Save Changes</button>
       </form>
-    </RegistrationContainer>
+    </EditUserInfoContainer>
   )
 }
 
-export default Registration
+export default EditUserInfoForm
 
-const RegistrationContainer = styled.section`
+const EditUserInfoContainer = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;

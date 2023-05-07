@@ -11,6 +11,8 @@ import Navbar from './components/Navbar'
 import ReadLater from './components/ReadLater'
 import Favorites from './components/Favorites'
 import UserPage from './pages/UserPage'
+import EditUserInfoForm from './components/EditUserInfoForm'
+import EditPasswordForm from './components/EditPasswordForm'
 import { Routes, Route } from 'react-router-dom'
 import { lightTheme, darkTheme } from './styled-component/theme'
 import { ThemeProvider } from 'styled-components'
@@ -58,6 +60,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/user-info" element={<UserPage />} />
+          <Route path="/edit-user-info" element={<EditUserInfoForm />} />
+          <Route path="/edit-password" element={<EditPasswordForm />} />
 
           <Route path="/products" element={<Products />} />
           <Route path="/history" element={<History />} />

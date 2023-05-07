@@ -18,8 +18,8 @@ import {
   faPenToSquare,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
-import { addFavorite, removeFavorite } from '../../redux/slices/favoriteSlice'
-import { removeStarredId, addStarredId } from '../../redux/slices/favoriteSlice'
+import { addFavorites, removeFavorite } from '../../redux/slices/auth'
+import { removeStarredId, addStarredId } from '../../redux/slices/auth'
 import { addPostReaction, removePostReaction } from '../../redux/slices/posts'
 import Reactions from '../Reactions'
 import { fetchUserData } from '../../redux/slices/auth'
@@ -33,6 +33,7 @@ interface PostProps {
   isLoading: boolean
   isEditable: boolean
   content: string
+  truncate: boolean
   onClickRemove: (id: string) => void
 }
 const Post: React.FC<PostProps> = ({
@@ -46,10 +47,11 @@ const Post: React.FC<PostProps> = ({
   isEditable,
   content,
   onClickRemove,
+  truncate,
 }) => {
   const postId = _id
   const dispatch = useDispatch()
-  const starredIds = useSelector((state) => state.favorites.starredIds) || []
+  const starredIds = useSelector((state) => state.auth.starredIds) || []
   const [starred, setStared] = useState(starredIds.includes(postId))
   const userData = useSelector((state) => state.auth.data) || {}
   const userId = userData?._id
@@ -88,9 +90,9 @@ const Post: React.FC<PostProps> = ({
 
   const handleToggleFavorite = () => {
     if (starred) {
-      dispatch(removeFavorite(userId))
+      dispatch(removeFavorite(postId))
     } else {
-      dispatch(addFavorite(userId))
+      dispatch(addFavorites(postId))
     }
   }
   const handleStarAndFavoriteClick = () => {
@@ -145,7 +147,7 @@ const Post: React.FC<PostProps> = ({
 
         <img src={imageUrl} alt={title} width={'250px'} />
 
-        <Text>{content.slice(0, 100)}...</Text>
+        <Text>{truncate ? content.substring(0, 300) + '...' : content}</Text>
 
         <Container flexDirection={'column'}>
           <Container>

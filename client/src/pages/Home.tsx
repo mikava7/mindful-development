@@ -72,6 +72,7 @@ const Home = () => {
                   _id={post._id}
                   title={post.title}
                   content={post.content}
+                  truncate={true}
                   createdAt={post.createdAt}
                   imageUrl={`http://localhost:5000${post.imageUrl}`}
                   author={post.author.fullName}

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from '../../axios'
+import { addFavorite } from '../../../../server/controllers/UserController'
 
 // Create an async thunk to fetch user data
 export const fetchLogin = createAsyncThunk(
@@ -30,6 +31,44 @@ export const fetchRegister = createAsyncThunk(
     } catch (error) {
       // If an error occurs, log it to the console and re-throw the error
       console.log(error.message || 'cant register')
+      throw error
+    }
+  }
+)
+
+export const editUserInfo = createAsyncThunk(
+  'auth/editUserInfo',
+  async ({ fullName, email, imageUrl }, { getState }) => {
+    const { auth } = getState()
+    const userId = auth.user._id
+    try {
+      const response = await axios.put(`/auth/${userId}/edit`, {
+        fullName,
+        email,
+        imageUrl,
+      })
+      return { success: true, updatedUser: response.data.updatedUser }
+    } catch (error) {
+      console.log(error.message || 'cant register')
+      throw error
+    }
+  }
+)
+
+export const editPassword = createAsyncThunk(
+  'auth/editPassword',
+  async ({ currentPassword, newPassword }, { getState }) => {
+    const { auth } = getState()
+    const userId = auth.user._id
+
+    try {
+      const response = await axios.put(`/auth/${userId}/edit-password`, {
+        currentPassword,
+        newPassword,
+      })
+      return response.data
+    } catch (error) {
+      console.log(error.message || 'cant change password')
       throw error
     }
   }
@@ -99,9 +138,39 @@ export const clearHistory = createAsyncThunk(
   }
 )
 
+export const getFavorites = createAsyncThunk(
+  'auth/getFavorites',
+  async (userId) => {
+    const response = await axios.get(`/auth/favorites/${userId}`)
+    return response.data.favorites
+  }
+)
+
+export const addFavorites = createAsyncThunk(
+  'auth/addFavorite',
+  async (postId) => {
+    console.log('postId in add favorite', postId)
+    const response = await axios.post(`/auth/favorites/${postId}`)
+    return response.data.favorites
+  }
+)
+
+export const removeFavorite = createAsyncThunk(
+  'auth/removeFavorite',
+  async (postId) => {
+    console.log('postId in remove favorite', postId)
+
+    const response = await axios.delete(`/auth/favorites/${postId}`)
+    return response.data.favorites
+  }
+)
+
 const initialState = {
   data: JSON.parse(localStorage.getItem('selectAuthStatus')) || null,
   user: null,
+  favorites: [],
+  starredIds: JSON.parse(localStorage.getItem('starredIds')),
+  updatedUser: null,
   VisitedPosts: [],
   status: 'loading',
 }
@@ -115,6 +184,14 @@ const authSlice = createSlice({
       state.data = null
       window.localStorage.removeItem('selectAuthStatus')
       state.VisitedPosts = []
+    },
+    addStarredId: (state, action) => {
+      state.starredIds = [...state.starredIds, action.payload]
+      localStorage.setItem('starredIds', JSON.stringify(state.starredIds))
+    },
+    removeStarredId: (state, action) => {
+      state.starredIds = state.starredIds.filter((id) => id !== action.payload)
+      localStorage.setItem('starredIds', JSON.stringify(state.starredIds))
     },
   },
 
@@ -202,6 +279,61 @@ const authSlice = createSlice({
       .addCase(clearHistory.rejected, (state) => {
         state.status = 'failed'
       })
+      .addCase(getFavorites.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(getFavorites.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.favorites = action.payload
+      })
+      .addCase(getFavorites.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
+      .addCase(addFavorites.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(addFavorites.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.favorites = action.payload
+      })
+      .addCase(addFavorites.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
+      .addCase(removeFavorite.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(removeFavorite.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.favorites = action.payload
+      })
+      .addCase(removeFavorite.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
+      .addCase(editUserInfo.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(editUserInfo.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.updatedUser = action.payload
+      })
+      .addCase(editUserInfo.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
+      .addCase(editPassword.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(editPassword.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.user = action.payload
+      })
+      .addCase(editPassword.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
   },
 })
 
@@ -209,6 +341,7 @@ export const selectAuthStatus = (state) => Boolean(state.auth.data)
 export const selectAuthData = (state) => state.auth.data
 
 export const { clearUserData, clearVisitedPosts } = authSlice.actions
+export const { addStarredId, removeStarredId } = authSlice.actions
 
 // Export the auth slice
 export const authReducer = authSlice.reducer

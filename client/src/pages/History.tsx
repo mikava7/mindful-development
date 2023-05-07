@@ -27,6 +27,10 @@ const History = () => {
           {VisitedPosts.map((post) => (
             <div key={post._id}>
               <h3>{post.title}</h3>
+              <img
+                src={`http://localhost:5000${post.imageUrl}`}
+                alt={post.title}
+              />
               <p>{post.content}</p>
             </div>
           ))}

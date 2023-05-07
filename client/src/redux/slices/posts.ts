@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import instance from '../../axios'
 import Reactions from '../../components/Reactions'
 import { selectAuthData } from './auth'
-
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   try {
     const { data } = await instance.get('/posts')
@@ -12,10 +11,9 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
     throw error
   }
 })
-
 export const fetchSinglePosts = createAsyncThunk(
   'posts/fetchSinglePosts',
-  async () => {
+  async (id) => {
     try {
       const { data } = await instance.get(`/posts/${id}`)
       return data
@@ -25,7 +23,6 @@ export const fetchSinglePosts = createAsyncThunk(
     }
   }
 )
-
 export const updateViewCount = createAsyncThunk(
   'posts/updateViewCount',
   async (postId) => {
@@ -38,7 +35,6 @@ export const updateViewCount = createAsyncThunk(
     }
   }
 )
-
 export const deletePost = createAsyncThunk(
   'posts/removePost',
   async (postId) => {
@@ -63,7 +59,6 @@ export const deletePost = createAsyncThunk(
     }
   }
 )
-
 export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
   try {
     const { data } = await instance.get('/tags/last5')
@@ -109,7 +104,6 @@ const initialState = {
   posts: {
     items: [],
     reactedBy: [],
-    favorites: [],
     status: 'loading',
   },
   tags: {

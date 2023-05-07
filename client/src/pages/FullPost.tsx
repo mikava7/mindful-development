@@ -15,6 +15,8 @@ const FullPost: React.FC = () => {
   const { posts } = useSelector((state) => state.posts) || {}
   const userId = useSelector((state) => state.auth.data) || {}
   const comments = useSelector((state) => state.comments.comments) || {}
+  const status = useSelector((state) => state.posts.posts.status)
+  console.log('status', status)
 
   // console.log('id', id)
   // console.log('userData in fulPost', userId)
@@ -52,11 +54,8 @@ const FullPost: React.FC = () => {
 
   return (
     <div>
-      {/* If the `posts` array is still loading, display a loading message */}
-      {posts.status === 'loading' && <div>Loading...</div>}
-
-      {/* If the `post` variable is null, display a "post not found" message */}
-      {!post && <p>Post not found</p>}
+      {status === 'loading' && !post && <div>Loading...</div>}
+      {!post && status !== 'loading' && <p>Post not found</p>}
 
       {/* If the `post` variable is not null, display the post and its comments */}
       {post && (
@@ -67,6 +66,7 @@ const FullPost: React.FC = () => {
             _id={post._id}
             title={post.title}
             content={post.content}
+            truncate={false}
             createdAt={post.createdAt}
             imageUrl={`http://localhost:5000${post.imageUrl}`}
             author={post.author.fullName}
@@ -85,7 +85,6 @@ const FullPost: React.FC = () => {
           />
 
           {/* Use the `ReactMarkdown` component to render the post content as Markdown */}
-          <ReactMarkdown>{post.content}</ReactMarkdown>
         </>
       )}
     </div>
