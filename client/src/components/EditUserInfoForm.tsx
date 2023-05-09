@@ -11,7 +11,6 @@ const EditUserInfoForm: React.FC = () => {
   const navigate = useNavigate()
 
   const currentUser = useSelector((state) => state.auth.user)
-  console.log('currentUser', currentUser)
   const [imageUrl, setImageUrl] = useState(currentUser.imageUrl)
 
   const handleImageUpload = (imageUrl) => {

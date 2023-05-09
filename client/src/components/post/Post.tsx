@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { PostSkeleton } from '../../components/PostSkeleton'
@@ -12,17 +13,15 @@ import {
   StyledLink,
 } from '../../styled-component/styledComponents'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faBookmark,
-  faStar,
-  faPenToSquare,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons'
+
 import { addFavorites, removeFavorite } from '../../redux/slices/auth'
 import { removeStarredId, addStarredId } from '../../redux/slices/auth'
 import { addPostReaction, removePostReaction } from '../../redux/slices/posts'
-import Reactions from '../Reactions'
 import { fetchUserData } from '../../redux/slices/auth'
+import { PostDetails } from '../postdetails/PostDetails'
+import { ActionButton } from '../actionButton/ActionButton'
+import PostBody from '../postBody/PostBody'
+import EditButtons from '../editButtons/EditButtons'
 interface PostProps {
   _id: string
   title: string
@@ -49,30 +48,28 @@ const Post: React.FC<PostProps> = ({
   onClickRemove,
   truncate,
 }) => {
-  const postId = _id
   const dispatch = useDispatch()
   const starredIds = useSelector((state) => state.auth.starredIds) || []
-  const [starred, setStared] = useState(starredIds.includes(postId))
   const userData = useSelector((state) => state.auth.data) || {}
+  const postId = _id
   const userId = userData?._id
-
   const { posts } = useSelector((state) => state.posts) || {}
 
+  const [starred, setStared] = useState(starredIds.includes(postId))
   const likes = posts?.items.find((post) => post._id === postId)?.reactedBy
-
   const [isLiked, setIsLiked] = useState(likes ? likes.includes(userId) : false)
 
-  const handleLikeClick = () => {
-    setIsLiked(true)
-    dispatch(addPostReaction(postId))
-  }
-  const handleUnlikeClick = () => {
-    setIsLiked(false)
-    dispatch(removePostReaction(postId))
+  const handleHeartAndLikeClick = () => {
+    setIsLiked((prevHeart) => !prevHeart)
+    if (isLiked) {
+      dispatch(removePostReaction(postId))
+    } else {
+      dispatch(addPostReaction(postId))
+    }
   }
 
   useEffect(() => {
-    fetchUserData()
+    dispatch(fetchUserData())
   }, [dispatch])
 
   useEffect(() => {
@@ -99,15 +96,9 @@ const Post: React.FC<PostProps> = ({
     handleStarClick()
     handleToggleFavorite()
   }
-  const starColor = starred ? 'gold' : 'gray'
+  const bookmarkColor = starred ? 'gold' : 'gray'
+  const heartColor = isLiked ? 'red' : 'gray'
 
-  const formattedDate = createdAt
-    ? new Date(createdAt).toLocaleDateString('en-US', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      })
-    : 'Invalid Date'
   if (!content) {
     content = 'No content available'
   }
@@ -116,74 +107,47 @@ const Post: React.FC<PostProps> = ({
     onClickRemove(_id)
   }
 
-  // display loading skeleton if post is still being loaded
   if (isLoading) {
     return <PostSkeleton />
   }
 
   return (
-    <div>
-      {/* display edit buttons if post is editable */}
+    <BoxContainer>
       {isEditable && (
-        <Container justifyContent="flex-end">
-          <StyledLink to={`/posts/${_id}/edit`}>
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </StyledLink>
-          <ListItem onClick={handleRemove}>
-            <FontAwesomeIcon icon={faTrash} />
-          </ListItem>
-        </Container>
+        <EditButtons postId={postId} handleRemove={handleRemove} />
       )}
-      <Container flexDirection={'column'}>
-        <Title>
-          <StyledLink to={`/posts/${_id}`} fontSize={'2rem'}>
-            {title}{' '}
-          </StyledLink>
-        </Title>
 
-        <Container justifyContent={'flex-end'} width={'80%'}>
-          <span>Views: {viewCount}</span>
-        </Container>
+      <PostBody
+        _id={_id}
+        title={title}
+        imageUrl={imageUrl}
+        content={content}
+        truncate={truncate}
+        author={author}
+      />
 
-        <img src={imageUrl} alt={title} width={'250px'} />
+      <PostDetails likes={likes} viewCount={viewCount} createdAt={createdAt} />
 
-        <Text>{truncate ? content.substring(0, 300) + '...' : content}</Text>
-
-        <Container flexDirection={'column'}>
-          <Container>
-            <Container justifyContent={'flex-start'}>
-              <b>{author}</b>
-            </Container>
-
-            <Container>
-              <p>{formattedDate}</p>
-
-              <span>
-                <FontAwesomeIcon
-                  onClick={handleStarAndFavoriteClick}
-                  icon={faStar}
-                  style={{ color: starColor }}
-                />
-              </span>
-
-              <span>
-                <FontAwesomeIcon icon={faBookmark} />
-              </span>
-            </Container>
-          </Container>
-          <div>
-            {!isLiked && <button onClick={handleLikeClick}>like</button>}
-            {isLiked && <button onClick={handleUnlikeClick}>liked</button>}
-            <p>{likes ? likes.length : 0} likes</p>
-          </div>
-
-          <Container justifyContent={'flex-end'}>
-            <Link to={`/posts/${_id}`}>Read more </Link>
-          </Container>
-        </Container>
-      </Container>
-    </div>
+      <ActionButton
+        handleStarAndFavoriteClick={handleStarAndFavoriteClick}
+        bookmarkColor={bookmarkColor}
+        handleHeartAndLikeClick={handleHeartAndLikeClick}
+        heartColor={heartColor}
+        _id={_id}
+      />
+    </BoxContainer>
   )
 }
 
 export default Post
+
+const BoxContainer = styled.section`
+  background-color: ${({ theme }) => theme.colors.lightBlack};
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  max-width: 467px;
+`

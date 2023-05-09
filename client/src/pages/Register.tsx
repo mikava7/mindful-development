@@ -30,13 +30,9 @@ const Registration: React.FC = () => {
   })
 
   // Submit the register form
-  const onSubmit = async (values) => {
-    // Add the imageUrl to the values object
+  const handleRegistrationSubmit = async (values) => {
     values.imageUrl = imageUrl
-
-    // Call the fetchUserData action creator and wait for the response
     const data = await dispatch(fetchRegister(values))
-    // console.log('data in register', data)
     if (data.payload && 'token' in data.payload) {
       window.localStorage.setItem('token', data.payload.token)
     } else {
@@ -51,7 +47,7 @@ const Registration: React.FC = () => {
 
   return (
     <RegistrationContainer>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(handleRegistrationSubmit)}>
         <h2>create account</h2>
         <input
           className="field"

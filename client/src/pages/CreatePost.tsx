@@ -46,7 +46,7 @@ const CreatePost = () => {
           setContent(data.post.content)
           setImageUrl(data.post.imageUrl)
           if (data.post && data.post.tags) {
-            setTags(data.post.tags.join(','))
+            setTags(data.post.tags.join(' ').replace(/,/g, ''))
           }
           console.log('res', data)
         }
@@ -113,14 +113,14 @@ const CreatePost = () => {
           imageUrl={imageUrl}
         />
       </div>
-      {imageUrl && (
+      {/* {imageUrl && (
         <Container>
           <img src={`http://localhost:5000${imageUrl}`} alt="Uploaded" />
-          <div style={{ marginTop: '1rem' }} onClick={onClickRemoveImage}>
+          <div style={{ marginTop: '1rem' }} onClick={handleImageRemove}>
             Delete <FontAwesomeIcon icon={faTrash} />
           </div>
         </Container>
-      )}
+      )} */}
       <br />
 
       <Input

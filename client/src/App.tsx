@@ -35,11 +35,11 @@ function App() {
 
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
-      <FlexContainer justifyContent={'space-around'} margin={'1rem'}>
+      <FlexContainer justifyContent={'space-between'} margin={'1rem'}>
         <Navbar />
-        <Container flexDirection={'row'}>
+        <div>
           <Header />
-        </Container>
+        </div>
         <ListItem onClick={toggleTheme} style={{ marginRight: '2rem' }}>
           {theme === 'dark' ? (
             <FontAwesomeIcon icon={farMoon} className="fa-thin" />
@@ -50,7 +50,7 @@ function App() {
       </FlexContainer>
       <GlobalStyle />
 
-      <div className="App">
+      <FlexContainer>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/navbar" element={<Navbar />} />
@@ -68,7 +68,7 @@ function App() {
           <Route path="/read-later" element={<ReadLater />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
-      </div>
+      </FlexContainer>
     </ThemeProvider>
   )
 }

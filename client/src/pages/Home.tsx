@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import Comments from './Comments'
@@ -61,42 +62,42 @@ const Home = () => {
     : filteredPosts
 
   return (
-    <div>
-      <div>
+    <HomeContainer flexDirection="column">
+      <Tags
+        items={tags.items}
+        onTagClick={handleTagClick}
+        setSelectedTag={setSelectedTag}
+        setReset={setReset}
+      />
+      <Card>
         {isPostsLoading
           ? [Array(5)]
           : postsToRender.map((post, index) => (
-              <CardContainer key={index}>
-                <Post
-                  key={post._id}
-                  _id={post._id}
-                  title={post.title}
-                  content={post.content}
-                  truncate={true}
-                  createdAt={post.createdAt}
-                  imageUrl={`http://localhost:5000${post.imageUrl}`}
-                  author={post.author.fullName}
-                  viewCount={post.viewCount}
-                  tags={post.tags}
-                  comments={post.comments}
-                  isEditable={userData?._id === post.author?._id}
-                  onClickRemove={() => onClickRemove(post._id)}
-                />
-              </CardContainer>
+              <Post
+                key={post._id}
+                _id={post._id}
+                title={post.title}
+                content={post.content}
+                truncate={true}
+                createdAt={post.createdAt}
+                imageUrl={`http://localhost:5000${post.imageUrl}`}
+                author={post.author.fullName}
+                viewCount={post.viewCount}
+                tags={post.tags}
+                comments={post.comments}
+                isEditable={userData?._id === post.author?._id}
+                onClickRemove={() => onClickRemove(post._id)}
+              />
             ))}
-      </div>
-
-      <div>
-        <Tags
-          items={tags.items}
-          isLoading={isTagsLoading}
-          onTagClick={handleTagClick}
-          setSelectedTag={setSelectedTag}
-          setReset={setReset}
-        />
-      </div>
-    </div>
+      </Card>
+    </HomeContainer>
   )
 }
-
 export default Home
+const HomeContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
+const Card = styled.section``

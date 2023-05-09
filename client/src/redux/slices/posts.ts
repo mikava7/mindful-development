@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import instance from '../../axios'
 import Reactions from '../../components/Reactions'
 import { selectAuthData } from './auth'
+
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   try {
     const { data } = await instance.get('/posts')
@@ -54,7 +55,7 @@ export const deletePost = createAsyncThunk(
 
       return postId
     } catch (error) {
-      console.log('Error removing post:', error)
+      console.log(error.message)
       throw error
     }
   }
@@ -68,7 +69,6 @@ export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
     throw error
   }
 })
-
 export const addPostReaction = createAsyncThunk(
   'posts/addPostReaction',
   async (postId, { getState }) => {
@@ -84,7 +84,6 @@ export const addPostReaction = createAsyncThunk(
     }
   }
 )
-
 export const removePostReaction = createAsyncThunk(
   'posts/removePostReaction',
   async (postId, { getState }) => {
