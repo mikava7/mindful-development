@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Post from '../components/post/Post'
 import { useDispatch, useSelector } from 'react-redux'
 import { deletePost, updateViewCount, fetchPosts } from '../redux/slices/posts'
@@ -8,6 +8,7 @@ import { fetchComments } from '../redux/slices/commentSlice'
 
 import ReactMarkdown from 'react-markdown'
 import Comments from './Comments.js'
+import { Button } from '../styled-component/styledComponents'
 
 const FullPost: React.FC = () => {
   const dispatch = useDispatch()
@@ -16,7 +17,8 @@ const FullPost: React.FC = () => {
   const userId = useSelector((state) => state.auth.data) || {}
   const comments = useSelector((state) => state.comments.comments) || {}
   const status = useSelector((state) => state.posts.posts.status)
-  console.log('status', status)
+  const [showComments, setShowComments] = useState(false)
+  // console.log('status', status)
 
   // console.log('id', id)
   // console.log('userData in fulPost', userId)
@@ -76,15 +78,18 @@ const FullPost: React.FC = () => {
             onClickRemove={onClickRemove}
           />
 
-          {/* Pass the post ID and comments to the `Comments` component */}
-          <Comments
-            postId={post._id}
-            comments={comments.filter(
-              (comment) => comment.comment.post === post._id
-            )}
-          />
-
-          {/* Use the `ReactMarkdown` component to render the post content as Markdown */}
+          {showComments ? (
+            <Comments
+              postId={post._id}
+              comments={comments.filter(
+                (comment) => comment.comment.post === post._id
+              )}
+            />
+          ) : (
+            <button onClick={() => setShowComments(!showComments)}>
+              comments
+            </button>
+          )}
         </>
       )}
     </div>

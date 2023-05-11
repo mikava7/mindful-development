@@ -1,5 +1,5 @@
-import { createGlobalStyle, ThemeProvider } from 'styled-components';
-import { lightTheme, darkTheme, theme } from './theme.ts';
+import { createGlobalStyle, ThemeProvider } from 'styled-components'
+import { lightTheme, darkTheme, theme } from './theme.ts'
 
 export const GlobalStyle = createGlobalStyle`
   body {
@@ -8,6 +8,8 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+     text-decoration: none;
+   list-style: none;
   }
 
   h1, h2, h3 {
@@ -20,4 +22,4 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
 
   }
-`;
+`

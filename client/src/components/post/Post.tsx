@@ -113,12 +113,10 @@ const Post: React.FC<PostProps> = ({
 
   return (
     <BoxContainer>
-      {isEditable && (
-        <EditButtons postId={postId} handleRemove={handleRemove} />
-      )}
-
       <PostBody
-        _id={_id}
+        isEditable={isEditable}
+        handleRemove={handleRemove}
+        postId={postId}
         title={title}
         imageUrl={imageUrl}
         content={content}
@@ -126,14 +124,19 @@ const Post: React.FC<PostProps> = ({
         author={author}
       />
 
-      <PostDetails likes={likes} viewCount={viewCount} createdAt={createdAt} />
+      <PostDetails
+        postId={postId}
+        likes={likes}
+        viewCount={viewCount}
+        createdAt={createdAt}
+      />
 
       <ActionButton
         handleStarAndFavoriteClick={handleStarAndFavoriteClick}
         bookmarkColor={bookmarkColor}
         handleHeartAndLikeClick={handleHeartAndLikeClick}
         heartColor={heartColor}
-        _id={_id}
+        postId={postId}
       />
     </BoxContainer>
   )

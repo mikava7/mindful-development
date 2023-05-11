@@ -5,15 +5,29 @@ import {
   Text,
   ImageContainer,
 } from '../../styled-component/styledComponents'
-const PostBody = ({ truncate, content, imageUrl, title, _id, author }) => {
+import EditButtons from '../editButtons/EditButtons'
+const PostBody = ({
+  truncate,
+  content,
+  imageUrl,
+  title,
+  postId,
+  author,
+  handleRemove,
+  isEditable,
+}) => {
   return (
     <BodyContainer>
-      <StyledLink to={`/posts/${_id}`}>{title.substring(0, 60)} </StyledLink>
+      <StyledLink to={`/posts/${postId}`}>{title.substring(0, 60)} </StyledLink>
+      <Text alignSelf={'flex-end'}>
+        By <b style={{ marginLeft: '0.6rem' }}>{author}</b>
+      </Text>
+      <EditButtonsContainer>
+        {isEditable && (
+          <EditButtons postId={postId} handleRemove={handleRemove} />
+        )}
+      </EditButtonsContainer>
       <ImageContainer flexDirection={'column'}>
-        <Text alignSelf={'flex-end'}>
-          By <b style={{ marginLeft: '0.6rem' }}>{author}</b>
-        </Text>
-
         <img src={imageUrl} alt={title.substring(0, 60)} />
       </ImageContainer>
       <Text>{truncate ? content.substring(0, 300) + '...' : content}</Text>
@@ -25,4 +39,10 @@ export default PostBody
 
 const BodyContainer = styled.div`
   padding-bottom: 0.5rem;
+  position: relative;
+`
+const EditButtonsContainer = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
 `

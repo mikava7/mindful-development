@@ -3,13 +3,15 @@ import React, { useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faImage, faTrash } from '@fortawesome/free-solid-svg-icons'
-
+import styled from 'styled-components'
+import { ImageContainer } from '../styled-component/styledComponents'
 const ImageUpload = ({ onImageUpload, onImageRemove, imageUrl }) => {
   const inputFileRef = useRef(null)
   const [selectedFile, setSelectedFile] = useState(null)
 
   const handleChangeFile = async (event) => {
     try {
+      event.preventDefault()
       const file = event.target.files[0]
       if (!file) {
         throw new Error('No file selected')
@@ -34,10 +36,10 @@ const ImageUpload = ({ onImageUpload, onImageRemove, imageUrl }) => {
   }
 
   return (
-    <div>
-      <div onClick={() => inputFileRef.current.click()}>
+    <Container>
+      <Button onClick={() => inputFileRef.current.click()}>
         Upload <FontAwesomeIcon icon={faImage} />{' '}
-      </div>
+      </Button>
       <input
         ref={inputFileRef}
         type="file"
@@ -46,13 +48,15 @@ const ImageUpload = ({ onImageUpload, onImageRemove, imageUrl }) => {
       />
       {imageUrl && (
         <div>
-          <img src={`http://localhost:5000${imageUrl}`} alt="Uploaded" />
-          <div style={{ marginTop: '1rem' }} onClick={onClickRemoveImage}>
+          <ImageContainer>
+            <img src={`http://localhost:5000${imageUrl}`} alt="Uploaded" />
+          </ImageContainer>
+          <Button onClick={onClickRemoveImage}>
             Delete <FontAwesomeIcon icon={faTrash} />
-          </div>
+          </Button>
         </div>
       )}
-    </div>
+    </Container>
   )
 }
 
@@ -63,3 +67,30 @@ ImageUpload.propTypes = {
 }
 
 export default ImageUpload
+const Container = styled.div`
+  width: 300px;
+  height: 300px;
+`
+// const ImageContainer = styled.div`
+//   width: 300px;
+//   height: 300px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+
+//   & > img {
+//     max-width: 100%;
+//     height: auto;
+//     object-fit: contain;
+//   }
+// `
+const Button = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4267b2;
+  font-size: 1rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+`

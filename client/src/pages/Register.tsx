@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchRegister, selectAuthStatus } from '../redux/slices/auth.ts'
 import { Navigate } from 'react-router-dom'
 import ImageUpload from '../components/imageUpload'
-
+import { Button } from '../styled-component/styledComponents'
 const Registration: React.FC = () => {
   const authStatus = useSelector(selectAuthStatus)
   const dispatch = useDispatch()
@@ -31,8 +31,8 @@ const Registration: React.FC = () => {
 
   // Submit the register form
   const handleRegistrationSubmit = async (values) => {
-    values.imageUrl = imageUrl
     const data = await dispatch(fetchRegister(values))
+    values.imageUrl = imageUrl
     if (data.payload && 'token' in data.payload) {
       window.localStorage.setItem('token', data.payload.token)
     } else {
@@ -67,14 +67,12 @@ const Registration: React.FC = () => {
           placeholder="Enter password"
           {...register('password', { required: 'Enter password' })}
         />
-
         <ImageUpload
           onImageUpload={handleImageUpload}
           onImageRemove={handleImageRemove}
           imageUrl={imageUrl}
         />
-
-        <button type="submit">Register</button>
+        <Button type="submit">Register</Button>
       </form>
     </RegistrationContainer>
   )
@@ -83,12 +81,12 @@ const Registration: React.FC = () => {
 export default Registration
 
 const RegistrationContainer = styled.section`
+  width: 310px;
   display: flex;
   flex-direction: column;
   align-items: center;
 
   h2 {
-    font-size: 1.5rem;
     margin-bottom: 1rem;
   }
 
@@ -99,20 +97,10 @@ const RegistrationContainer = styled.section`
 
     input {
       margin-bottom: 1rem;
-      padding: 0.5rem;
+      padding: 0.5rem 0 0.5rem 0.5rem;
       border-radius: 0.5rem;
       border: 1px solid #4267b2;
       font-size: 1rem;
-      width: 100%;
-    }
-
-    button {
-      background-color: #4267b2;
-      color: #fff;
-      border-radius: 0.25rem;
-      border: none;
-      font-size: 1rem;
-      padding: 0.5rem;
       width: 100%;
     }
   }

@@ -12,6 +12,7 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
     throw error
   }
 })
+
 export const fetchSinglePosts = createAsyncThunk(
   'posts/fetchSinglePosts',
   async (id) => {
@@ -24,6 +25,7 @@ export const fetchSinglePosts = createAsyncThunk(
     }
   }
 )
+
 export const updateViewCount = createAsyncThunk(
   'posts/updateViewCount',
   async (postId) => {
@@ -36,6 +38,7 @@ export const updateViewCount = createAsyncThunk(
     }
   }
 )
+
 export const deletePost = createAsyncThunk(
   'posts/removePost',
   async (postId) => {
@@ -60,6 +63,7 @@ export const deletePost = createAsyncThunk(
     }
   }
 )
+
 export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
   try {
     const { data } = await instance.get('/tags/last5')
@@ -69,6 +73,7 @@ export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
     throw error
   }
 })
+
 export const addPostReaction = createAsyncThunk(
   'posts/addPostReaction',
   async (postId, { getState }) => {
@@ -84,6 +89,7 @@ export const addPostReaction = createAsyncThunk(
     }
   }
 )
+
 export const removePostReaction = createAsyncThunk(
   'posts/removePostReaction',
   async (postId, { getState }) => {
@@ -99,6 +105,7 @@ export const removePostReaction = createAsyncThunk(
     }
   }
 )
+
 const initialState = {
   posts: {
     items: [],

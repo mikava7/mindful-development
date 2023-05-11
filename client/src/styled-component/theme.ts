@@ -15,6 +15,8 @@ export const lightTheme = {
     background: '#FFFFFF', // White
     transparent: 'transparent',
     lightBlack: '#FFFFFF',
+    commentColor: '#65676b',
+    inputText: '#f0f2f5',
   },
 }
 
@@ -26,5 +28,7 @@ export const darkTheme = {
     background: '#1C1E21', // Black
     lightBlack: '#3a3c3f',
     transparent: 'transparent',
+    commentColor: '#f0f2f5',
+    inputText: '#65676b',
   },
 }

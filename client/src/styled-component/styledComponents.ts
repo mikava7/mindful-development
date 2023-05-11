@@ -116,13 +116,14 @@ export const ImageContainer = styled.div<StyledComponentProps>`
   flex-direction: ${(props) => props.flexDirection || 'row'};
   justify-content: ${(props) => props.justifyContent || 'center'};
   align-items: ${(props) => props.alignItems || 'center'};
-  padding: 1rem;
-  max-width: 22rem;
-  max-height: 22rem;
+  padding: 0.1rem;
+  margin-bottom: 0.5rem;
+  height: 100%;
 
   & img {
     max-width: 100%;
-    height: auto;
+    max-height: 100%;
+    object-fit: contain;
   }
 
   @media (min-width: 719px) {
@@ -224,11 +225,11 @@ export const ListItem = styled.li<StyledComponentProps>`
   }
 `
 export const StyledLink = styled(Link)<StyledComponentProps>`
-  font-size: 1.2rem;
   text-decoration: none;
   color: ${(props) => props.theme.colors.text};
   font-size: ${(props) => props.fontSize || '1.2rem'};
-  padding: 1rem;
+  padding: ${(props) => props.padding || '1rem'};
+  width: ${(props) => props.width || '30px'};
   &:hover {
     color: ${(props) => props.theme.colors.primary};
   }
@@ -240,10 +241,13 @@ export const StyledLink = styled(Link)<StyledComponentProps>`
   }
 `
 export const Button = styled.button<StyledComponentProps>`
-  height: ${(props) => props.height || '30px'};
-  width: ${(props) => props.width || '30px'};
   font-size: ${(props) => props.fontSize || '1.2rem'};
-  padding: ${(props) => props.padding || '0.5rem'};
+  padding: ${(props) => props.padding || '0.3rem'};
+  margin: ${(props) => props.margin || '0'};
+
+  color: ${(props) => props.theme.colors.lightBlack};
+  background-color: ${(props) => props.theme.colors.primary};
   width: 100%;
-  border: none;
+  border-radius: 12px;
+  margin-top: 0.5rem 0;
 `

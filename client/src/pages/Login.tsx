@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchLogin, selectAuthStatus } from '../redux/slices/auth.ts'
+import { fetchLogin, selectAuthStatus } from '../redux/slices/auth'
 import { Navigate } from 'react-router-dom'
-
+import { Button } from '../styled-component/styledComponents'
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = () => {
@@ -17,10 +17,7 @@ const Login: React.FC<LoginProps> = () => {
     handleSubmit,
     formState: { errors, isValid },
   } = useForm({
-    defaultValues: {
-      email: 'mikava365@gmail.com',
-      password: '12345',
-    },
+    defaultValues: {},
   })
 
   const onSubmit = async (values) => {
@@ -43,28 +40,25 @@ const Login: React.FC<LoginProps> = () => {
   return (
     <LoginForm>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label>
-          E-Mail:
-          <input
-            className="field"
-            type="email"
-            name="email"
-            placeholder="Enter email"
-            {...register('email', { required: 'Enter email' })}
-          />
-        </label>
+        <input
+          className="field"
+          type="email"
+          name="email"
+          placeholder="Enter email"
+          {...register('email', { required: 'Enter email' })}
+        />
+
         {errors.email && <p>{errors.email.message}</p>}
-        <label>
-          Password:
-          <input
-            className="field"
-            type="password"
-            name="password"
-            placeholder="Enter password"
-            {...register('password', { required: 'Enter password' })}
-          />
-        </label>
-        <button type="submit">Login</button>
+
+        <input
+          className="field"
+          type="password"
+          name="password"
+          placeholder="Enter password"
+          {...register('password', { required: 'Enter password' })}
+        />
+
+        <Button type="submit">Login</Button>
       </form>
     </LoginForm>
   )
@@ -73,43 +67,17 @@ const Login: React.FC<LoginProps> = () => {
 export default Login
 
 const LoginForm = styled.div`
+  width: 310px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  margin: 0 auto;
-  width: 90%;
 
-  label {
-    display: flex;
-    flex-direction: column;
+  input {
     margin-bottom: 1rem;
-    width: 100%;
-
-    input {
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-
-      margin-top: 0.5rem;
-      font-size: 1rem;
-      width: 100%;
-      border: 1px solid #4267b2;
-    }
-
-    p {
-      color: red;
-      margin-top: 0.25rem;
-    }
-  }
-
-  button {
-    background-color: #4267b2;
-    color: #fff;
-    border-radius: 0.25rem;
-    border: none;
+    padding: 0.5rem 0 0.5rem 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #4267b2;
     font-size: 1rem;
-    padding: 0.5rem;
-    margin-top: 1rem;
     width: 100%;
   }
 `
