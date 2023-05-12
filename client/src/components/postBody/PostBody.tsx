@@ -15,13 +15,12 @@ const PostBody = ({
   author,
   handleRemove,
   isEditable,
+  userId,
 }) => {
   return (
     <BodyContainer>
       <StyledLink to={`/posts/${postId}`}>{title.substring(0, 60)} </StyledLink>
-      <Text alignSelf={'flex-end'}>
-        By <b style={{ marginLeft: '0.6rem' }}>{author}</b>
-      </Text>
+      <Text alignSelf={'flex-end'}>{author}</Text>
       <EditButtonsContainer>
         {isEditable && (
           <EditButtons postId={postId} handleRemove={handleRemove} />

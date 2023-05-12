@@ -13,7 +13,7 @@ import Favorites from './components/Favorites'
 import UserPage from './pages/UserPage'
 import EditUserInfoForm from './components/EditUserInfoForm'
 import EditPasswordForm from './components/EditPasswordForm'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useParams } from 'react-router-dom'
 import { lightTheme, darkTheme } from './styled-component/theme'
 import { ThemeProvider } from 'styled-components'
 import { GlobalStyle } from './styled-component/globalStyle'
@@ -25,7 +25,9 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMoon } from '@fortawesome/free-solid-svg-icons'
 import { faMoon as farMoon } from '@fortawesome/free-regular-svg-icons'
-
+import AllUsers from './components/AllUsers'
+import MyPage from './components/MyPage'
+import User from './components/User'
 function App() {
   const [theme, setTheme] = useState('light')
 
@@ -59,7 +61,12 @@ function App() {
           <Route path="/posts/:id/edit" element={<CreatePost />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/user-info" element={<UserPage />} />
+          <Route path="/my-page" element={<MyPage />} />
+
+          <Route path="/user" element={<User />} />
+          <Route path="/users" element={<AllUsers />} />
+
+          <Route path="/users/:userId" element={<UserPage />} />
           <Route path="/edit-user-info" element={<EditUserInfoForm />} />
           <Route path="/edit-password" element={<EditPasswordForm />} />
 

@@ -36,6 +36,28 @@ export const fetchRegister = createAsyncThunk(
   }
 )
 
+export const getAllUsers = createAsyncThunk('auth/getAllUsers', async () => {
+  try {
+    const { data } = await axios.get('/auth/users')
+
+    return data
+  } catch (error) {
+    console.log('Error fetching all users:', error)
+    throw error
+  }
+})
+export const fetchUserById = createAsyncThunk(
+  'auth/fetchUserById',
+  async (userId) => {
+    try {
+      const { data } = await axios.get(`/auth/users/${userId}`)
+      return data
+    } catch (error) {
+      console.log('Error fetching user:', error)
+    }
+  }
+)
+
 export const editUserInfo = createAsyncThunk(
   'auth/editUserInfo',
   async ({ fullName, email, imageUrl }, { getState }) => {
@@ -49,7 +71,7 @@ export const editUserInfo = createAsyncThunk(
       })
       return { success: true, updatedUser: response.data.updatedUser }
     } catch (error) {
-      console.log(error.message || 'cant register')
+      console.log(error.message || 'cant get user info')
       throw error
     }
   }
@@ -165,10 +187,46 @@ export const removeFavorite = createAsyncThunk(
   }
 )
 
+export const follow = createAsyncThunk(
+  'auth/follow',
+
+  async (userId, { getState }) => {
+    const dataId = getState().auth.user._id
+    console.log('dataId in follow action creator', dataId)
+
+    try {
+      const { data } = await axios.post(`/auth/follow/${userId}`, null)
+      return data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
+
+export const unFollow = createAsyncThunk(
+  'auth/unFollow',
+
+  async (userId, { getState }) => {
+    const dataId = getState().auth.user._id
+    console.log('dataId in unFollow action creator', dataId)
+
+    try {
+      const { data } = await axios.delete(`/auth/follow/${userId}`)
+      return data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
+
 const initialState = {
   data: JSON.parse(localStorage.getItem('selectAuthStatus')) || null,
   user: null,
+  users: [],
+  userById: null,
   favorites: [],
+  followers: [],
+  following: [],
   starredIds: JSON.parse(localStorage.getItem('starredIds')),
   updatedUser: null,
   VisitedPosts: [],
@@ -192,6 +250,26 @@ const authSlice = createSlice({
     removeStarredId: (state, action) => {
       state.starredIds = state.starredIds.filter((id) => id !== action.payload)
       localStorage.setItem('starredIds', JSON.stringify(state.starredIds))
+    },
+    followUser: (state, action) => {
+      state.followStatus = 'success'
+      state.following.push(action.payload.followingId)
+      state.user.following.push(action.payload.followingId)
+      state.userById.followers.push(state.user._id)
+      state.followers.push(state.user._id)
+    },
+    unFollowUser: (state, action) => {
+      state.followStatus = 'success'
+      state.following = state.following.filter(
+        (id) => id !== action.payload.followingId
+      )
+      state.user.following = state.user.following.filter(
+        (id) => id !== action.payload.followingId
+      )
+      state.userById.followers = state.userById.followers.filter(
+        (id) => id !== state.user._id
+      )
+      state.followers = state.followers.filter((id) => id !== state.user._id)
     },
   },
 
@@ -221,7 +299,36 @@ const authSlice = createSlice({
         state.status = 'error'
         state.data = null
       })
-
+      .addCase(getAllUsers.pending, (state) => {
+        // When the async thunk is pending, set the status to "loading" and clear any existing data
+        state.status = 'loading'
+        state.users = []
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        // When the async thunk is fulfilled, set the status to "loaded" and update the data with the fetched data
+        state.status = 'loaded'
+        state.users = action.payload
+      })
+      .addCase(getAllUsers.rejected, (state) => {
+        // When the async thunk is rejected, set the status to "error" and clear any existing data
+        state.status = 'error'
+        state.users = []
+      })
+      .addCase(fetchUserById.pending, (state) => {
+        // When the async thunk is pending, set the status to "loading" and clear any existing data
+        state.status = 'loading'
+        state.userById = null
+      })
+      .addCase(fetchUserById.fulfilled, (state, action) => {
+        // When the async thunk is fulfilled, set the status to "loaded" and update the data with the fetched data
+        state.status = 'loaded'
+        state.userById = action.payload
+      })
+      .addCase(fetchUserById.rejected, (state) => {
+        // When the async thunk is rejected, set the status to "error" and clear any existing data
+        state.status = 'error'
+        state.userById = null
+      })
       .addCase(fetchUserData.pending, (state) => {
         // When the async thunk is pending, set the status to "loading" and clear any existing data
         state.status = 'loading'
@@ -341,7 +448,8 @@ export const selectAuthStatus = (state) => Boolean(state.auth.data)
 export const selectAuthData = (state) => state.auth.data
 
 export const { clearUserData, clearVisitedPosts } = authSlice.actions
-export const { addStarredId, removeStarredId } = authSlice.actions
+export const { addStarredId, removeStarredId, followUser, unFollowUser } =
+  authSlice.actions
 
 // Export the auth slice
 export const authReducer = authSlice.reducer

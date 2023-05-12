@@ -17,6 +17,7 @@ import {
   faUser,
   faUserPlus,
   faShop,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons'
 const Navbar = () => {
   const favorites = useSelector((state) => state.favorites.favorites) || {}
@@ -46,10 +47,16 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faClockRotateLeft} />
             History
           </StyledLink>
-          <StyledLink to="/user-info" onClick={toggleMenu}>
-            <FontAwesomeIcon icon={faBookmark} />
-            User Info
+          <StyledLink to="/my-page" onClick={toggleMenu}>
+            <FontAwesomeIcon icon={faUser} />
+            My page
           </StyledLink>
+
+          <StyledLink to="/users" onClick={toggleMenu}>
+            <FontAwesomeIcon icon={faUsers} />
+            All Users
+          </StyledLink>
+
           <StyledLink to="/favorites" onClick={toggleMenu}>
             <FontAwesomeIcon icon={faStar} />
             Favorites{favoritesLength ? favoritesLength : null}
