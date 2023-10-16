@@ -62,7 +62,7 @@ const Product: React.FC<ProductProps> = ({
       <Title>{title}</Title>
       <Price>${price}</Price>
       <Category>{category}</Category>
-      <Rating>Rating: {rating}</Rating>
+      <Rating>Rating: s{rating}</Rating>
     </ProductCard>
   )
 }
