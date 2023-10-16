@@ -59,7 +59,7 @@ const Product: React.FC<ProductProps> = ({
   return (
     <ProductCard>
       <Image src={image} alt={title} />
-      <Title>{title}</Title>
+      <Title>{title} s</Title>
       <Price>${price}</Price>
       <Category>{category}</Category>
       <Rating>Rating: s{rating}</Rating>
