@@ -45,7 +45,9 @@ const Image = styled.img`
   object-fit: contain;
   margin-top: 8px;
 `
-
+const Rating = styled.p`
+  margin: 5px 0;
+`
 const Product: React.FC<ProductProps> = ({
   title,
   price,
@@ -60,6 +62,7 @@ const Product: React.FC<ProductProps> = ({
       <Title>{title}</Title>
       <Price>${price}</Price>
       <Category>{category}</Category>
+      <Rating>Rating: {rating}</Rating>
     </ProductCard>
   )
 }
