@@ -24,4 +24,5 @@ export interface valueTypes {
   password: string
   name: string
   imageUrl: string
+  fullname: string
 }

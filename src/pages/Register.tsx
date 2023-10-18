@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useForm } from 'react-hook-form'
+import { useForm, RegisterOptions } from 'react-hook-form'
 // import { useDispatch, useSelector } from 'react-redux'
 import { useAppDispatch, useAppSelector } from '../redux/hooks.js'
 // import { fetchRegister, selectAuthStatus } from '../redux/slices/auth.ts'
@@ -10,6 +10,7 @@ import ImageUpload from '../components/imageUpload'
 import { Button } from '../styled-component/styledComponents'
 import { valueTypes } from '../types/types.js'
 type imageType = string
+type Register = (name: string, options?: RegisterOptions) => (ref: any) => void
 
 const Registration: React.FC = () => {
   // const authStatus = useAppSelector(selectAuthStatus)
@@ -30,9 +31,13 @@ const Registration: React.FC = () => {
     setError,
     formState: { errors, isValid },
     reset,
-  } = useForm({
+  } = useForm<valueTypes>({
     defaultValues: {},
   })
+  // Explicitly specify the type for register
+  const registerOptions: RegisterOptions = {
+    required: 'This field is required',
+  }
 
   // Submit the register form
   const handleRegistrationSubmit = async (values: valueTypes) => {
@@ -54,24 +59,33 @@ const Registration: React.FC = () => {
     <RegistrationContainer>
       <form onSubmit={handleSubmit(handleRegistrationSubmit)}>
         <h2>create account</h2>
-        <input
-          className="field"
-          label="Name"
-          placeholder="Enter full name"
-          {...register('fullName', { required: 'Enter full name' })}
-        />
-        <input
-          className="field"
-          label="E-Mail"
-          placeholder="Enter email"
-          {...register('email', { required: 'Enter email' })}
-        />
-        <input
-          className="field"
-          label="password"
-          placeholder="Enter password"
-          {...register('password', { required: 'Enter password' })}
-        />
+        <div className="field">
+          <label htmlFor="fullname">Name</label>
+          <input
+            type="text"
+            id="fullname"
+            placeholder="Enter full name"
+            {...register('fullname', registerOptions)}
+          />
+        </div>
+        <div className="field">
+          <label htmlFor="email">E-Mail</label>
+          <input
+            type="text"
+            id="email"
+            placeholder="Enter email"
+            {...register('email', registerOptions)}
+          />
+        </div>
+        <div className="field">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter password"
+            {...register('password', registerOptions)}
+          />
+        </div>
         <ImageUpload
           onImageUpload={handleImageUpload}
           onImageRemove={handleImageRemove}
