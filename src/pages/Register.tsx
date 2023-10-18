@@ -1,17 +1,22 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchRegister, selectAuthStatus } from '../redux/slices/auth.ts'
+// import { useDispatch, useSelector } from 'react-redux'
+import { useAppDispatch, useAppSelector } from '../redux/hooks.js'
+// import { fetchRegister, selectAuthStatus } from '../redux/slices/auth.ts'
+import { registerUser } from '../redux/slices/auth/authSlice.js'
 import { Navigate } from 'react-router-dom'
 import ImageUpload from '../components/imageUpload'
 import { Button } from '../styled-component/styledComponents'
+import { valueTypes } from '../types/types.js'
+type imageType = string
+
 const Registration: React.FC = () => {
-  const authStatus = useSelector(selectAuthStatus)
-  const dispatch = useDispatch()
+  // const authStatus = useAppSelector(selectAuthStatus)
+  const dispatch = useAppDispatch()
   const [imageUrl, setImageUrl] = useState('')
 
-  const handleImageUpload = (imageUrl) => {
+  const handleImageUpload = (imageUrl: imageType) => {
     setImageUrl(imageUrl)
   }
 
@@ -30,8 +35,8 @@ const Registration: React.FC = () => {
   })
 
   // Submit the register form
-  const handleRegistrationSubmit = async (values) => {
-    const data = await dispatch(fetchRegister(values))
+  const handleRegistrationSubmit = async (values: valueTypes) => {
+    const data = await dispatch(registerUser(values))
     values.imageUrl = imageUrl
     if (data.payload && 'token' in data.payload) {
       window.localStorage.setItem('token', data.payload.token)
@@ -41,9 +46,9 @@ const Registration: React.FC = () => {
     }
   }
 
-  if (authStatus) {
-    return <Navigate to="/" />
-  }
+  // if (authStatus) {
+  //   return <Navigate to="/" />
+  // }
 
   return (
     <RegistrationContainer>

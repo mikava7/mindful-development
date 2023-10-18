@@ -6,7 +6,7 @@ import {
   Navigation,
   HamburgerMenu,
   SlideOutMenu,
-} from '../styled-component/styledComponents'
+} from '../../styled-component/styledComponents'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBars,
