@@ -63,7 +63,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/my-page" element={<MyPage />} />
 
-          <Route path="/user" element={<User />} />
+          {/* <Route path="/user" element={<User />} /> */}
           <Route path="/users" element={<AllUsers />} />
 
           <Route path="/users/:userId" element={<UserPage />} />

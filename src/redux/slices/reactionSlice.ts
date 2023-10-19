@@ -1,44 +1,65 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import instance from '../../axios';
-
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import instance from '../../axios'
 
 export const addPostReaction = createAsyncThunk(
   'posts/addPostReaction',
-  async ({ postId, reactionType }) => {
+  async ({
+    postId,
+    reactionType,
+  }: {
+    postId: string
+    reactionType: string
+  }) => {
     try {
       const { data } = await instance.post(`/posts/${postId}/reaction`, {
         reactionType,
-      });
-
-      return data;
+      })
+      return data
     } catch (error) {
-      console.log('Error adding reaction:', error);
-      throw error;
+      console.log('Error adding reaction:', error)
+      throw error
     }
   }
-);
+)
 
 export const removePostReaction = createAsyncThunk(
   'posts/removePostReaction',
-  async ({ postId, reactionType }) => {
+  async ({
+    postId,
+    reactionType,
+  }: {
+    postId: string
+    reactionType: string
+  }) => {
     try {
       const { data } = await instance.delete(`/posts/${postId}/reaction`, {
         data: { reactionType },
-      });
-
-      return data;
+      })
+      return data
     } catch (error) {
-      console.log('Error removing reaction:', error);
-      throw error;
+      console.log('Error removing reaction:', error)
+      throw error
     }
   }
-);
+)
 
-const initialState = {
+interface Post {
+  id: string
+  title: string
+  // Add other properties here
+}
+
+interface reactionState {
+  posts: Post[]
+  loading: boolean
+  error: string | null
+}
+
+const initialState: reactionState = {
   posts: [],
   loading: false,
   error: null,
-};
+}
 
 const reactionSlice = createSlice({
   name: 'posts',
@@ -47,51 +68,64 @@ const reactionSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(addPostReaction.pending, (state) => {
-        state.loading = true;
+        state.loading = true
       })
       .addCase(addPostReaction.fulfilled, (state, action) => {
-        state.loading = false;
-        const { postId, reactionType } = action.payload;
-        const postIndex = state.posts.findIndex((post) => post._id === postId);
+        state.loading = false
+        const { postId, reactionType } = action.payload
+        const postIndex = state.posts.findIndex((post) => post.id === postId)
 
         if (postIndex !== -1) {
           // Update the post in the state
-          const post = state.posts[postIndex];
-          const newReactions = { ...post.reactions, [reactionType]: post.reactions[reactionType] + 1 };
+          const post = state.posts[postIndex]
+          const newReactions = {
+            ...post.reactions,
+            [reactionType]: post.reactions[reactionType] + 1,
+          }
           const reactedBy = post.reactions.reactedBy.includes(userId)
             ? post.reactions.reactedBy
-            : [...post.reactions.reactedBy, userId];
+            : [...post.reactions.reactedBy, userId]
 
-          const updatedPost = { ...post, reactions: { ...newReactions, reactedBy } };
+          const updatedPost = {
+            ...post,
+            reactions: { ...newReactions, reactedBy },
+          }
 
-          state.posts.splice(postIndex, 1, updatedPost);
+          state.posts.splice(postIndex, 1, updatedPost)
         }
       })
       .addCase(addPostReaction.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+        state.loading = false
+        state.error = action.error.message
       })
       .addCase(removePostReaction.pending, (state) => {
-        state.loading = true;
+        state.loading = true
       })
       .addCase(removePostReaction.fulfilled, (state, action) => {
-        state.loading = false;
-        const { postId, reactionType } = action.payload;
-        const postIndex = state.posts.findIndex((post) => post._id === postId);
+        state.loading = false
+        const { postId, reactionType } = action.payload
+        const postIndex = state.posts.findIndex((post) => post.id === postId)
 
         if (postIndex !== -1) {
           // Update the post in the state
-          const post = state.posts[postIndex];
-          const newReactions = { ...post.reactions, [reactionType]: post.reactions[reactionType] - 1 };
-          const reactedBy = post.reactions.reactedBy.filter((id) => id !== userId);
-
-          const updatedPost = { ...post, reactions: { ...newReactions, reactedBy } };
-   
-          state.posts.splice(postIndex, 1, updatedPost) }
-
-  
+          const post = state.posts[postIndex]
+          const newReactions = {
+            ...post.reactions,
+            [reactionType]: post.reactions[reactionType] - 1,
           }
+          const reactedBy = post.reactions.reactedBy.filter(
+            (id) => id !== userId
+          )
+
+          const updatedPost = {
+            ...post,
+            reactions: { ...newReactions, reactedBy },
+          }
+
+          state.posts.splice(postIndex, 1, updatedPost)
+        }
+      })
+  },
 })
 
-export const postReducer = reactionSlice.reducer;
-
+export const postReducer = reactionSlice.reducer

@@ -2,8 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../redux/store'
-import { clearUserData, selectAuthStatus } from '../../redux/slices/auth'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+// import { RootState } from '../redux/store'
+import { clearUserData } from '../../redux/slices/auth'
+import { selectAuthStatus } from '../../redux/slices/auth'
 import {
   FlexContainer,
   Container,
@@ -13,7 +15,7 @@ import {
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
-  const authStatus = useSelector((state: RootState) => selectAuthStatus(state))
+  const isAuthentnicated = useAppSelector(selectAuthStatus)
   const dispatch = useDispatch()
   const user = useSelector((state: RootState) => state.auth.data)
 
@@ -29,7 +31,7 @@ const Header: React.FC<HeaderProps> = () => {
   return (
     <div>
       <FlexContainer width={'300px'}>
-        {authStatus ? (
+        {isAuthentnicated ? (
           <>
             <StyledLink to="/create-post">create post</StyledLink>
             <button onClick={onClickLogout}>Logout</button>

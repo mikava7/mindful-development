@@ -1,22 +1,25 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useForm, RegisterOptions } from 'react-hook-form'
-// import { useDispatch, useSelector } from 'react-redux'
 import { useAppDispatch, useAppSelector } from '../redux/hooks.js'
-// import { fetchRegister, selectAuthStatus } from '../redux/slices/auth.ts'
-import { registerUser } from '../redux/slices/auth/authSlice.js'
+import { selectAuthStatus } from '../redux/slices/auth/authSlice.js'
+import { registerUser } from '../redux/slices/auth/authThunk.js'
 import { Navigate } from 'react-router-dom'
 import ImageUpload from '../components/imageUpload'
 import { Button } from '../styled-component/styledComponents'
 import { valueTypes } from '../types/types.js'
+// import StatusIndicator from '../components/notifications/statusIndicator/StatusIndicator.js'
+// import LoadingSpinner from '../components/notifications/loading/LoadingSpinner.js'
+// import ErrorMessage from '../components/notifications/error/ErrorMessage.js'
+// import SuccessMessage from '../components/notifications/SuccessMessage/SuccessMessage.js'
 type imageType = string
 type Register = (name: string, options?: RegisterOptions) => (ref: any) => void
 
 const Registration: React.FC = () => {
-  // const authStatus = useAppSelector(selectAuthStatus)
+  const isAuthenticated = useAppSelector(selectAuthStatus)
   const dispatch = useAppDispatch()
   const [imageUrl, setImageUrl] = useState('')
-
+  const navigate = Navigate
   const handleImageUpload = (imageUrl: imageType) => {
     setImageUrl(imageUrl)
   }
@@ -41,19 +44,14 @@ const Registration: React.FC = () => {
 
   // Submit the register form
   const handleRegistrationSubmit = async (values: valueTypes) => {
+    console.log('values', values)
     const data = await dispatch(registerUser(values))
     values.imageUrl = imageUrl
-    if (data.payload && 'token' in data.payload) {
-      window.localStorage.setItem('token', data.payload.token)
-    } else {
-      // Otherwise, show an error message
-      alert('Invalid email or password. Please try again.')
-    }
   }
 
-  // if (authStatus) {
-  //   return <Navigate to="/" />
-  // }
+  if (isAuthenticated) {
+    // return <Navigate to="/login" />
+  }
 
   return (
     <RegistrationContainer>

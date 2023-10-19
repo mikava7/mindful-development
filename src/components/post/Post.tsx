@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
+import { useAppDispatch } from '../../redux/store'
+import { useAppSelector } from '../../redux/hooks'
+import { RootState } from '../../redux/store'
 import { Link } from 'react-router-dom'
 import { PostSkeleton } from '../../components/PostSkeleton'
 import axios from '../../axios'
@@ -48,13 +51,14 @@ const Post: React.FC<PostProps> = ({
   onClickRemove,
   truncate,
 }) => {
-  const dispatch = useDispatch()
-  const starredIds = useSelector((state) => state.auth.starredIds) || []
-  const userData = useSelector((state) => state.auth.data) || {}
+  const dispatch = useAppDispatch()
+  const starredIds =
+    useAppSelector((state: RootState) => state.auth.starredIds) || []
+  const userData = useAppSelector((state: RootState) => state.auth.data) || {}
   const postId = _id
   const userId = userData?._id
-  const { posts } = useSelector((state) => state.posts) || {}
-
+  const { posts } = useAppSelector(((state: RootState) => state.posts) || {})
+  console.log(posts, posts)
   const [starred, setStared] = useState(starredIds.includes(postId))
   const likes = posts?.items.find((post) => post._id === postId)?.reactedBy
   const [isLiked, setIsLiked] = useState(likes ? likes.includes(userId) : false)

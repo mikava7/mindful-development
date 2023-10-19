@@ -2,18 +2,20 @@ import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
 
 import { postReducer } from './slices/posts'
-// import { authReducer } from './slices/auth'
-import { authReducer } from './slices/auth/authSlice'
-
+import { authReducer } from './slices/auth'
+// import { authReducer } from './slices/auth/authSlice'
 import { commentReducer } from './slices/commentSlice'
 import favoritesSlice from './slices/favoriteSlice'
-
+import { tagsReducer } from './slices/tags/tagsSlice'
+import { usersReducer } from './slices/user/userSlice'
 const store = configureStore({
   reducer: {
     posts: postReducer,
     auth: authReducer,
+    users: usersReducer,
     comments: commentReducer,
     favorites: favoritesSlice,
+    tags: tagsReducer,
   },
 })
 

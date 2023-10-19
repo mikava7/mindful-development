@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
+import { useAppSelector, useAppDispatch } from '../redux/hooks'
 import { Link, useParams } from 'react-router-dom'
 import Comments from './Comments'
 import Post from '../components/post/Post'
 import Tags from '../pages/Tags'
 import Products from '../components/Products'
-import Navbar from '../components/Navbar'
-import { fetchPosts, fetchTags, deletePost } from '../redux/slices/posts'
+import Navbar from '../components/navbar/Navbar'
+import { fetchPosts, deletePost } from '../redux/slices/posts'
+import {
+  fetchTags,
+  selectTags,
+  selectTagsErrorState,
+  selectTagsLoading,
+} from '../redux/slices/tags/tagsSlice'
 import { fetchComments } from '../redux/slices/commentSlice'
 import { fetchUserData } from '../redux/slices/auth'
 import {
@@ -16,16 +23,17 @@ import {
 } from '../styled-component/styledComponents'
 
 const Home = () => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const [reset, setReset] = useState(false)
-  const { posts, tags } = useSelector((state) => state.posts) || {}
+  const posts = useSelector((state) => state.posts) || {}
   const userData = useSelector((state) => state.auth.user) || {}
-  // const userId = userData?._id
-  // console.log('userData', userData)
-  // console.log('userId', userId)
+
   const isPostsLoading = posts.status === 'loading'
-  const isTagsLoading = tags.status === 'loading'
+  const tags = useAppSelector(selectTags)
+  const isTagsLoading = useAppSelector(selectTagsLoading)
+  const tagsError = useAppSelector(selectTagsErrorState)
+  // console.log('isTagsLoading', isTagsLoading)
   const comments = useSelector((state) => state.comments.comments)
 
   const [selectedTag, setSelectedTag] = useState(null)
@@ -64,7 +72,7 @@ const Home = () => {
   return (
     <HomeContainer flexDirection="column">
       <Tags
-        items={tags.items}
+        items={tags}
         onTagClick={handleTagClick}
         setSelectedTag={setSelectedTag}
         setReset={setReset}

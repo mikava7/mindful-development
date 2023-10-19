@@ -26,8 +26,6 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const toggleMenu = () => {
     setIsOpen((prevState) => !prevState)
-    console.log('clicked')
-    console.log('isOpen', isOpen)
   }
 
   return (

@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 import axios from '../../axios'
 import { addFavorite } from './favoriteSlice'
 
@@ -36,16 +37,6 @@ export const fetchRegister = createAsyncThunk(
   }
 )
 
-export const getAllUsers = createAsyncThunk('auth/getAllUsers', async () => {
-  try {
-    const { data } = await axios.get('/auth/users')
-
-    return data
-  } catch (error) {
-    console.log('Error fetching all users:', error)
-    throw error
-  }
-})
 export const fetchUserById = createAsyncThunk(
   'auth/fetchUserById',
   async (userId) => {
@@ -248,7 +239,7 @@ const authSlice = createSlice({
       localStorage.setItem('starredIds', JSON.stringify(state.starredIds))
     },
     removeStarredId: (state, action) => {
-      state.starredIds = state.starredIds.filter((id) => id !== action.payload)
+      state.starredIds = state.starredIds?.filter((id) => id !== action.payload)
       localStorage.setItem('starredIds', JSON.stringify(state.starredIds))
     },
     followUser: (state, action) => {
@@ -299,21 +290,7 @@ const authSlice = createSlice({
         state.status = 'error'
         state.data = null
       })
-      .addCase(getAllUsers.pending, (state) => {
-        // When the async thunk is pending, set the status to "loading" and clear any existing data
-        state.status = 'loading'
-        state.users = []
-      })
-      .addCase(getAllUsers.fulfilled, (state, action) => {
-        // When the async thunk is fulfilled, set the status to "loaded" and update the data with the fetched data
-        state.status = 'loaded'
-        state.users = action.payload
-      })
-      .addCase(getAllUsers.rejected, (state) => {
-        // When the async thunk is rejected, set the status to "error" and clear any existing data
-        state.status = 'error'
-        state.users = []
-      })
+
       .addCase(fetchUserById.pending, (state) => {
         // When the async thunk is pending, set the status to "loading" and clear any existing data
         state.status = 'loading'
