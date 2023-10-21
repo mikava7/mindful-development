@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 
 // Styled component for the success message container
@@ -12,8 +11,11 @@ const SuccessContainer = styled.div`
   margin-top: 10px;
 `
 
-function SuccessMessage({ message }) {
-  return <SuccessContainer>{message}</SuccessContainer>
+type SuccessMessageProps = {
+  message: string
 }
 
+function SuccessMessage({ message }: SuccessMessageProps) {
+  return <SuccessContainer>{message}</SuccessContainer>
+}
 export default SuccessMessage

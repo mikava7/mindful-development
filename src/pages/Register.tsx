@@ -50,7 +50,7 @@ const Registration: React.FC = () => {
   }
 
   if (isAuthenticated) {
-    // return <Navigate to="/login" />
+    return <Navigate to="/login" />
   }
 
   return (
@@ -58,12 +58,12 @@ const Registration: React.FC = () => {
       <form onSubmit={handleSubmit(handleRegistrationSubmit)}>
         <h2>create account</h2>
         <div className="field">
-          <label htmlFor="fullname">Name</label>
+          <label htmlFor="fullName">Name</label>
           <input
             type="text"
-            id="fullname"
+            id="fullName"
             placeholder="Enter full name"
-            {...register('fullname', registerOptions)}
+            {...register('fullName', registerOptions)}
           />
         </div>
         <div className="field">
@@ -84,11 +84,11 @@ const Registration: React.FC = () => {
             {...register('password', registerOptions)}
           />
         </div>
-        <ImageUpload
+        {/* <ImageUpload
           onImageUpload={handleImageUpload}
           onImageRemove={handleImageRemove}
           imageUrl={imageUrl}
-        />
+        /> */}
         <Button type="submit">Register</Button>
       </form>
     </RegistrationContainer>

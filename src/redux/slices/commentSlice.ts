@@ -1,6 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import instance from '../../axios'
-
+interface CommentProps {
+  postId: string
+  _id: string
+  author?: string
+  content?: string
+}
 // Async thunk to fetch comments for a specific post
 export const fetchComments = createAsyncThunk(
   'comments/fetchComments',
@@ -16,7 +21,7 @@ export const fetchComments = createAsyncThunk(
 )
 
 // Async thunk to add a comment to a specific post
-export const addComment = createAsyncThunk(
+export const addComment = createAsyncThunk<string, CommentProps>(
   'comments/addComment',
   async ({ postId, content, author }) => {
     try {
@@ -34,7 +39,7 @@ export const addComment = createAsyncThunk(
   }
 )
 
-export const deleteComment = createAsyncThunk(
+export const deleteComment = createAsyncThunk<string, CommentProps>(
   'comments/deleteComment',
   async ({ postId, _id }) => {
     try {
@@ -71,17 +76,17 @@ const commentSlice = createSlice({
     // Case for when the fetchComments thunk is rejected
     builder.addCase(fetchComments.rejected, (state, action) => {
       state.status = 'failed'
-      state.error = action.error.message
+      // state.error = action.error
     })
     // Case for when the addComment thunk is fulfilled
     builder.addCase(addComment.fulfilled, (state, action) => {
-      state.comments.push(action.payload)
+      // state.comments.push(action.payload)
     })
     // Case for when the deleteComment thunk is fulfilled
     builder.addCase(deleteComment.fulfilled, (state, action) => {
-      state.comments = state.comments.filter(
-        (comment) => comment._id !== action.payload
-      )
+      // state.comments = state.comments.filter(
+      //   (comment) => comment._id !== action.payload
+      // )
     })
   },
 })

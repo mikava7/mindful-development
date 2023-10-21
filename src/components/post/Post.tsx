@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { useAppDispatch } from '../../redux/store'
@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { addFavorites, removeFavorite } from '../../redux/slices/auth'
 import { removeStarredId, addStarredId } from '../../redux/slices/auth'
-import { addPostReaction, removePostReaction } from '../../redux/slices/posts'
+// import { addPostReaction, removePostReaction } from '../../redux/slices/posts'
 import { fetchUserData } from '../../redux/slices/auth'
 import { PostDetails } from '../postdetails/PostDetails'
 import { ActionButton } from '../actionButton/ActionButton'
@@ -55,22 +55,21 @@ const Post: React.FC<PostProps> = ({
   const starredIds =
     useAppSelector((state: RootState) => state.auth.starredIds) || []
   const userData = useAppSelector((state: RootState) => state.auth.data) || {}
-  const postId = _id
+  const postId: string = _id
   const userId = userData?._id
-  const { posts } = useAppSelector(((state: RootState) => state.posts) || {})
-  console.log(posts, posts)
+  const posts = useAppSelector(((state: RootState) => state.posts) || {})
   const [starred, setStared] = useState(starredIds.includes(postId))
-  const likes = posts?.items.find((post) => post._id === postId)?.reactedBy
-  const [isLiked, setIsLiked] = useState(likes ? likes.includes(userId) : false)
+  // const likes = posts?.items.find((post) => post._id === postId)?.reactedBy
+  // const [isLiked, setIsLiked] = useState(likes ? likes.includes(userId) : false)
 
-  const handleHeartAndLikeClick = () => {
-    setIsLiked((prevHeart) => !prevHeart)
-    if (isLiked) {
-      dispatch(removePostReaction(postId))
-    } else {
-      dispatch(addPostReaction(postId))
-    }
-  }
+  // const handleHeartAndLikeClick = () => {
+  //   setIsLiked((prevHeart: boolean) => !prevHeart)
+  //   if (isLiked) {
+  //     dispatch(removePostReaction(postId))
+  //   } else {
+  //     dispatch(addPostReaction(postId))
+  //   }
+  // }
 
   useEffect(() => {
     dispatch(fetchUserData())
@@ -81,7 +80,7 @@ const Post: React.FC<PostProps> = ({
   }, [starredIds])
 
   const handleStarClick = () => {
-    setStared((prevStared) => !prevStared)
+    setStared((prevStared: boolean) => !prevStared)
     if (starredIds.includes(postId)) {
       dispatch(removeStarredId(postId))
     } else {
@@ -91,9 +90,9 @@ const Post: React.FC<PostProps> = ({
 
   const handleToggleFavorite = () => {
     if (starred) {
-      dispatch(removeFavorite(postId))
+      dispatch(removeFavorite())
     } else {
-      dispatch(addFavorites(postId))
+      dispatch(addFavorites())
     }
   }
   const handleStarAndFavoriteClick = () => {
@@ -101,7 +100,7 @@ const Post: React.FC<PostProps> = ({
     handleToggleFavorite()
   }
   const bookmarkColor = starred ? 'gold' : 'gray'
-  const heartColor = isLiked ? 'red' : 'gray'
+  // const heartColor = isLiked ? 'red' : 'gray'
 
   if (!content) {
     content = 'No content available'
@@ -126,11 +125,12 @@ const Post: React.FC<PostProps> = ({
         content={content}
         truncate={truncate}
         author={author}
+        userId={userId}
       />
 
       <PostDetails
         postId={postId}
-        likes={likes}
+        likes={bookmarkColor}
         viewCount={viewCount}
         createdAt={createdAt}
       />
@@ -138,8 +138,8 @@ const Post: React.FC<PostProps> = ({
       <ActionButton
         handleStarAndFavoriteClick={handleStarAndFavoriteClick}
         bookmarkColor={bookmarkColor}
-        handleHeartAndLikeClick={handleHeartAndLikeClick}
-        heartColor={heartColor}
+        handleHeartAndLikeClick={handleStarAndFavoriteClick}
+        heartColor={bookmarkColor}
         postId={postId}
       />
     </BoxContainer>

@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { useAppSelector } from '../redux/hooks'
 import { follow, unFollow } from '../redux/slices/auth'
 import { useParams } from 'react-router-dom'
 
 import axios from '../axios'
-
-function Follow({ followUserId }) {
+type UserId = string
+function Follow({ followUserId }: { followUserId: UserId }) {
   const [isFollowing, setIsFollowing] = useState(false)
-  const currentUser = useSelector((state) => state.auth.user)
+  const currentUser = useAppSelector((state) => state.auth.user)
 
-  useEffect(() => {
-    if (currentUser && currentUser.following.includes(followUserId)) {
-      setIsFollowing(true)
-    }
-  }, [currentUser, followUserId])
+  // useEffect(() => {
+  //   if (currentUser && currentUser.following.includes(followUserId)) {
+  //     setIsFollowing(true)
+  //   }
+  // }, [currentUser, followUserId])
 
   const handleFollow = async () => {
     try {

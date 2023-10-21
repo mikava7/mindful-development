@@ -14,3 +14,20 @@ export const registerUser = createAsyncThunk(
     }
   }
 )
+
+// Create an async thunk to fetch user data
+export const fetchLogin = createAsyncThunk(
+  'auth/fetchLogin',
+  async (params: valueTypes) => {
+    try {
+      // Make a POST request to the /auth/login endpoint with the provided params
+      const { data } = await axios.post('/auth/login', params)
+      // Return the fetched data
+      return data
+    } catch (error) {
+      // If an error occurs, log it to the console and re-throw the error
+      console.log(error || 'cant login')
+      throw error
+    }
+  }
+)

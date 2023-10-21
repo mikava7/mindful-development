@@ -1,9 +1,4 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-// import { RootState } from '../redux/store'
 import { clearUserData } from '../../redux/slices/auth'
 import { selectAuthStatus } from '../../redux/slices/auth'
 import {
@@ -16,8 +11,8 @@ interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
   const isAuthentnicated = useAppSelector(selectAuthStatus)
-  const dispatch = useDispatch()
-  const user = useSelector((state: RootState) => state.auth.data)
+  const dispatch = useAppDispatch()
+  const user = useAppSelector((state) => state.auth.data)
 
   const onClickLogout = () => {
     // Prompt the user to confirm they want to log out

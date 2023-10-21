@@ -2,87 +2,39 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import axios from '../../axios'
 import { addFavorite } from './favoriteSlice'
+import { RootState } from '../store'
 
-// Create an async thunk to fetch user data
-export const fetchLogin = createAsyncThunk(
-  'auth/fetchLogin',
-  async (params) => {
-    try {
-      // Make a POST request to the /auth/login endpoint with the provided params
-      const { data } = await axios.post('/auth/login', params)
-      // Return the fetched data
-      return data
-    } catch (error) {
-      // If an error occurs, log it to the console and re-throw the error
-      console.log(error.message || 'cant login')
-      throw error
-    }
-  }
-)
+interface PasswordCredentials {
+  currentPassword: string
+  newPassword: string
+  auth?: string
+}
 
-export const fetchRegister = createAsyncThunk(
-  'auth/fetchRegister',
-  async (params) => {
-    try {
-      // Make a POST request to the /auth/login endpoint with the provided params
-      const { data } = await axios.post('/auth/register', params)
-
-      // Return the fetched data
-      return data
-    } catch (error) {
-      // If an error occurs, log it to the console and re-throw the error
-      console.log(error.message || 'cant register')
-      throw error
-    }
-  }
-)
-
-export const fetchUserById = createAsyncThunk(
-  'auth/fetchUserById',
-  async (userId) => {
-    try {
-      const { data } = await axios.get(`/auth/users/${userId}`)
-      return data
-    } catch (error) {
-      console.log('Error fetching user:', error)
-    }
-  }
-)
-
-export const editUserInfo = createAsyncThunk(
-  'auth/editUserInfo',
-  async ({ fullName, email, imageUrl }, { getState }) => {
-    const { auth } = getState()
-    const userId = auth.user._id
-    try {
-      const response = await axios.put(`/auth/${userId}/edit`, {
-        fullName,
-        email,
-        imageUrl,
-      })
-      return { success: true, updatedUser: response.data.updatedUser }
-    } catch (error) {
-      console.log(error.message || 'cant get user info')
-      throw error
-    }
-  }
-)
-
-export const editPassword = createAsyncThunk(
+export const editPassword = createAsyncThunk<
+  string,
+  PasswordCredentials,
+  { state: RootState }
+>(
   'auth/editPassword',
   async ({ currentPassword, newPassword }, { getState }) => {
-    const { auth } = getState()
-    const userId = auth.user._id
+    const state = getState()
+    const user = state.auth.user
 
-    try {
-      const response = await axios.put(`/auth/${userId}/edit-password`, {
-        currentPassword,
-        newPassword,
-      })
-      return response.data
-    } catch (error) {
-      console.log(error.message || 'cant change password')
-      throw error
+    if (user && typeof user === 'object' && '_id' in user) {
+      const userId = user._id
+      // Now you can safely use userId
+      try {
+        const response = await axios.put(`/auth/${userId}/edit-password`, {
+          currentPassword,
+          newPassword,
+        })
+        return response.data
+      } catch (error) {
+        console.log('cant change password')
+        throw error
+      }
+    } else {
+      // Handle the case when the user is not found
     }
   }
 )
@@ -97,7 +49,7 @@ export const fetchUserData = createAsyncThunk(
       return user
     } catch (error) {
       // If an error occurs, log it to the console and re-throw the error
-      console.log(error.message || 'cant authenticate')
+      console.log('cant authenticate')
       throw error
     }
   }
@@ -210,9 +162,22 @@ export const unFollow = createAsyncThunk(
   }
 )
 
-const initialState = {
+interface AuthState {
+  data: any
+  user: string
+  users: string[]
+  userById: string | null
+  favorites: any[]
+  followers: any[]
+  following: any[]
+  starredIds: string | null
+  updatedUser: any
+  VisitedPosts: any[]
+  status: 'loading' | 'succeeded' | 'failed'
+}
+const initialState: AuthState = {
   data: JSON.parse(localStorage.getItem('selectAuthStatus')) || null,
-  user: null,
+  user: '',
   users: [],
   userById: null,
   favorites: [],
@@ -266,51 +231,13 @@ const authSlice = createSlice({
 
   // Define extra reducers to handle the state updates when the async thunk is pending, fulfilled, or rejected
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchLogin.pending, (state) => {
-        // When the async thunk is pending, set the status to "loading" and clear any existing data
-        state.status = 'loading'
-        state.data = null
-      })
-      .addCase(fetchLogin.fulfilled, (state, action) => {
-        // When the async thunk is fulfilled, set the status to "loaded" and update the data with the fetched data
-        state.status = 'loaded'
-        state.data = action.payload
-
-        // Set the authData in localStorage
-        if (state.data && 'token' in state.data) {
-          window.localStorage.setItem(
-            'selectAuthStatus',
-            JSON.stringify(state.data.token)
-          )
-        }
-      })
-      .addCase(fetchLogin.rejected, (state) => {
-        // When the async thunk is rejected, set the status to "error" and clear any existing data
-        state.status = 'error'
-        state.data = null
-      })
-
-      .addCase(fetchUserById.pending, (state) => {
-        // When the async thunk is pending, set the status to "loading" and clear any existing data
-        state.status = 'loading'
-        state.userById = null
-      })
-      .addCase(fetchUserById.fulfilled, (state, action) => {
-        // When the async thunk is fulfilled, set the status to "loaded" and update the data with the fetched data
-        state.status = 'loaded'
-        state.userById = action.payload
-      })
-      .addCase(fetchUserById.rejected, (state) => {
-        // When the async thunk is rejected, set the status to "error" and clear any existing data
-        state.status = 'error'
-        state.userById = null
-      })
+    builder // When the async thunk is pending, set the status to "loading" and clear any existing data
       .addCase(fetchUserData.pending, (state) => {
         // When the async thunk is pending, set the status to "loading" and clear any existing data
         state.status = 'loading'
         state.user = null
       })
+
       .addCase(fetchUserData.fulfilled, (state, action) => {
         // When the async thunk is fulfilled, set the status to "loaded" and update the data with the fetched data
         state.status = 'loaded'
@@ -321,21 +248,7 @@ const authSlice = createSlice({
         state.status = 'error'
         state.user = null
       })
-      .addCase(fetchRegister.pending, (state) => {
-        // When the async thunk is pending, set the status to "loading" and clear any existing data
-        state.status = 'loading'
-        state.data = null
-      })
-      .addCase(fetchRegister.fulfilled, (state, action) => {
-        // When the async thunk is fulfilled, set the status to "loaded" and update the data with the fetched data
-        state.status = 'loaded'
-        state.data = action.payload
-      })
-      .addCase(fetchRegister.rejected, (state) => {
-        // When the async thunk is rejected, set the status to "error" and clear any existing data
-        state.status = 'error'
-        state.data = null
-      })
+
       .addCase(VisitedPosts.pending, (state) => {
         state.status = 'loading'
       })
@@ -396,17 +309,7 @@ const authSlice = createSlice({
         state.status = 'failed'
         state.error = action.error.message
       })
-      .addCase(editUserInfo.pending, (state) => {
-        state.status = 'loading'
-      })
-      .addCase(editUserInfo.fulfilled, (state, action) => {
-        state.status = 'succeeded'
-        state.updatedUser = action.payload
-      })
-      .addCase(editUserInfo.rejected, (state, action) => {
-        state.status = 'failed'
-        state.error = action.error.message
-      })
+
       .addCase(editPassword.pending, (state) => {
         state.status = 'loading'
       })

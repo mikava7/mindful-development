@@ -1,19 +1,27 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
+import { useAppDispatch } from '../redux/store'
+import { useAppSelector } from '../redux/hooks'
 import { editUserInfo } from '../redux/slices/auth'
 import ImageUpload from '../components/imageUpload'
 import { useNavigate } from 'react-router-dom'
+type ImageUpload = string
+interface FormValues {
+  fullName: string
+  email: string
+  imageUrl?: string
+  // Add other fields as needed
+}
 
 const EditUserInfoForm: React.FC = () => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const currentUser = useSelector((state) => state.auth.user)
-  const [imageUrl, setImageUrl] = useState(currentUser.imageUrl)
+  const currentUser = useAppSelector((state) => state.auth.user)
+  const [imageUrl, setImageUrl] = useState('')
 
-  const handleImageUpload = (imageUrl) => {
+  const handleImageUpload = (imageUrl: ImageUpload) => {
     setImageUrl(imageUrl)
   }
 
@@ -27,30 +35,31 @@ const EditUserInfoForm: React.FC = () => {
     setError,
     formState: { errors, isValid },
     reset,
-  } = useForm({
+  } = useForm<FormValues>({
     defaultValues: {
-      fullName: currentUser.fullName,
-      email: currentUser.email,
+      // fullName: currentUser.fullName,
+      // email: currentUser.email,
     },
   })
 
+  interface Values {}
   // Submit the edit user info form
-  const onSubmit = async (values) => {
+  const onSubmit = async (values: FormValues) => {
     // Add the imageUrl to the values object
     values.imageUrl = imageUrl
 
     // Call the editUserInfo action creator and wait for the response
-    const data = await dispatch(editUserInfo(values))
+    // const data = await dispatch(editUserInfo(values))
 
-    if (data.payload && data.payload.success) {
-      // If the update was successful, reset the form and show a success message
-      reset()
-      alert('User information updated successfully.')
-      navigate('/user-info')
-    } else {
-      // Otherwise, show an error message
-      alert('Cannot update user information. Please try again.')
-    }
+    // if (data.payload && data.payload.success) {
+    //   // If the update was successful, reset the form and show a success message
+    //   reset()
+    //   alert('User information updated successfully.')
+    //   navigate('/user-info')
+    // } else {
+    //   // Otherwise, show an error message
+    //   alert('Cannot update user information. Please try again.')
+    // }
   }
 
   return (
@@ -59,22 +68,20 @@ const EditUserInfoForm: React.FC = () => {
         <h2>Edit User Information</h2>
         <input
           className="field"
-          label="Name"
           placeholder="Enter full name"
           {...register('fullName', { required: 'Enter full name' })}
         />
         <input
           className="field"
-          label="E-Mail"
           placeholder="Enter email"
           {...register('email', { required: 'Enter email' })}
         />
 
-        <ImageUpload
+        {/* <ImageUpload
           onImageUpload={handleImageUpload}
           onImageRemove={handleImageRemove}
           imageUrl={imageUrl}
-        />
+        /> */}
 
         <button type="submit">Save Changes</button>
       </form>

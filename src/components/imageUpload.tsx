@@ -1,18 +1,29 @@
 import instance from '../axios'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, ChangeEvent } from 'react'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faImage, faTrash } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'
 import { ImageContainer } from '../styled-component/styledComponents'
-const ImageUpload = ({ onImageUpload, onImageRemove, imageUrl }) => {
+
+interface ImageUploadProps {
+  onImageUpload: () => void
+  onImageRemove: () => void
+  imageUrl: string
+}
+
+const ImageUpload: React.FC<ImageUploadProps> = ({
+  onImageUpload,
+  onImageRemove,
+  imageUrl,
+}) => {
   const inputFileRef = useRef(null)
   const [selectedFile, setSelectedFile] = useState(null)
 
-  const handleChangeFile = async (event) => {
+  const handleChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
     try {
       event.preventDefault()
-      const file = event.target.files[0]
+      const file = event.target.files && event.target.files[0]
       if (!file) {
         throw new Error('No file selected')
       }
@@ -22,8 +33,8 @@ const ImageUpload = ({ onImageUpload, onImageRemove, imageUrl }) => {
 
       const response = await instance.post('/uploads', formData)
       const imageUrl = response.data.url
-      setSelectedFile(file)
-      onImageUpload(imageUrl)
+      // setSelectedFile(file)
+      // onImageUpload(imageUrl)
     } catch (error) {
       console.error(error)
       alert('File upload error')
@@ -37,9 +48,11 @@ const ImageUpload = ({ onImageUpload, onImageRemove, imageUrl }) => {
 
   return (
     <Container>
-      <Button onClick={() => inputFileRef.current.click()}>
+      {/* <Button onClick={() => inputFileRef?.current?.click?.()}> */}
+      <Button>
         Upload <FontAwesomeIcon icon={faImage} />{' '}
       </Button>
+
       <input
         ref={inputFileRef}
         type="file"
@@ -63,7 +76,7 @@ const ImageUpload = ({ onImageUpload, onImageRemove, imageUrl }) => {
 ImageUpload.propTypes = {
   onImageUpload: PropTypes.func.isRequired,
   onImageRemove: PropTypes.func.isRequired,
-  imageUrl: PropTypes.string,
+  // imageUrl: PropTypes.string,
 }
 
 export default ImageUpload

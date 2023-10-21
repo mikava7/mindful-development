@@ -2,7 +2,22 @@ import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
 
-const User = ({ user, myInfo, userId }) => {
+interface UserProps {
+  user: {
+    // Define the structure of the user object
+    // For example, assuming it has a name and email property:
+    fullName: string
+    email: string
+    imageUrl: string
+    // Add other properties as needed
+  }
+  myInfo: {
+    // Define the structure of myInfo object if available
+  }
+  userId: string
+}
+
+const User: React.FC<UserProps> = ({ user, myInfo, userId }) => {
   const [showIcons, setShowIcons] = useState(false)
 
   return (

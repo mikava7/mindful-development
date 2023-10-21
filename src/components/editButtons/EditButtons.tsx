@@ -4,7 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Container } from '../../styled-component/styledComponents'
 import styled from 'styled-components'
-const EditButtons = ({ handleRemove, postId }) => {
+interface EditButtonProps {
+  handleRemove: () => void
+  postId: string
+}
+const EditButtons: React.FC<EditButtonProps> = ({ handleRemove, postId }) => {
   return (
     <IconsContainer>
       <StyledLink to={`/posts/${postId}/edit`}>

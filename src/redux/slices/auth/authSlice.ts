@@ -1,23 +1,23 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
-import { registerUser } from './authThunk'
-
+import { registerUser, fetchLogin } from './authThunk'
+import { UserType } from '../../../types/types'
 // Define the initial state for the auth slice
 interface AuthState {
-  userData: null | string // Represents user data
-  status: 'idle' | 'pending' | 'fulfilled' | 'rejected' // Status for the async action
-  error: null | string // Represents any error
+  userData: UserType | null
+  status: 'idle' | 'pending' | 'fulfilled' | 'rejected'
+  error: null | string
 }
 
 const initialState: AuthState = {
   userData: null,
-  status: 'idle', // Initial status is 'idle'
+  status: 'idle',
   error: null,
 }
 
 // Create the auth slice using createSlice
-const authSlice = createSlice({
+const authSlice = createSlice<AuthState, any, 'auth'>({
   name: 'auth', // Slice name
   initialState,
   reducers: {},
@@ -38,6 +38,21 @@ const authSlice = createSlice({
       )
       .addCase(registerUser.rejected, (state) => {
         // When the async thunk is rejected, set the status to 'rejected' and clear any existing user data
+        state.status = 'rejected'
+        state.userData = null
+      })
+      .addCase(fetchLogin.pending, (state) => {
+        // When the async thunk is pending, set the status to "loading" and clear any existing data
+        state.status = 'pending'
+        state.userData = null
+      })
+      .addCase(fetchLogin.fulfilled, (state, action) => {
+        // When the async thunk is fulfilled, set the status to "loaded" and update the data with the fetched data
+        state.status = 'fulfilled'
+        state.userData = action.payload
+      })
+      .addCase(fetchLogin.rejected, (state) => {
+        // When the async thunk is rejected, set the status to "error" and clear any existing data
         state.status = 'rejected'
         state.userData = null
       })

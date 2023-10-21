@@ -6,9 +6,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   selectAuthStatus,
   editPassword,
-  fetchUserById,
   fetchUserData,
 } from '../redux/slices/auth'
+import { fetchUserById } from '../redux/slices/user/userThunk'
 import EditUserInfoForm from '../components/EditUserInfoForm'
 import EditPasswordForm from '../components/EditPasswordForm'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

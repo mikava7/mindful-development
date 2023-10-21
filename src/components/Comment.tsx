@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { deleteComment, fetchComments } from '../redux/slices/commentSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
+import { useAppSelector, useAppDispatch } from '../redux/hooks'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -11,7 +12,7 @@ import {
   faEllipsisVertical,
 } from '@fortawesome/free-solid-svg-icons'
 import { spawn } from 'child_process'
-interface Props {
+interface CommentProps {
   comment: {
     _id: string
     content: string
@@ -22,48 +23,55 @@ interface Props {
       post: string
     }
   }
-  postId: string // Add a prop to pass in the post ID
+  postId: string
+  isEditable: boolean
+  post: string
 }
 
-function Comment({ postId, comment, isEditable }) {
-  const dispatch = useDispatch()
-  const comments = useSelector((state) => state.comments.comments)
+const Comment: React.FC<CommentProps> = ({ postId, comment, isEditable }) => {
+  const dispatch = useAppDispatch()
+  const comments = useAppSelector((state) => state.comments.comments)
   const navigate = useNavigate()
-  const { _id, content, author, post } = comment
+  const { _id, content, author } = comment
+  console.log('comment', comment)
+  console.log({ postId, comment, isEditable })
+
   // Add a state variable to track whether the ellipsis icon has been clicked
   const [showOptions, setShowOptions] = useState(false)
 
   const onClickCommentRemove = () => {
     dispatch(deleteComment({ postId, _id }))
 
-    const updatedComments = comments.filter((comment) => comment._id === _id)
-    console.log(author)
-    dispatch({ type: 'comments/commentDeleted', payload: updatedComments })
+    // const updatedComments = comments.filter((comment) => comment._id === _id)
+    // console.log(author)
+    // dispatch({ type: 'comments/commentDeleted', payload: updatedComments })
     navigate(`/posts/${postId}`)
   }
-  console.log('author', author)
-  if (post === postId) {
+  // console.log('author', author)
+  if (postId) {
     return (
-      <CommentContainer key={_id}>
-        <img
-          src={`http://localhost:5000${author.imageUrl}`}
-          alt={author.fullName}
-        />
+      // <CommentContainer key={_id}>
+      //   <img
+      //     // src={`http://localhost:5000${author.imageUrl}`}
+      //     alt={author.fullName}
+      //   />
 
-        <div>
-          <p>
-            {' '}
-            <b> {author.fullName} </b>
-          </p>
+      //   <div>
+      //     <p>
+      //       {' '}
+      //       <b> {author.fullName} </b>
+      //     </p>
 
-          <p>{content}</p>
-        </div>
-        <span>
-          {isEditable && (
-            <FontAwesomeIcon icon={faTrash} onClick={onClickCommentRemove} />
-          )}
-        </span>
-      </CommentContainer>
+      //     <p>{content}</p>
+      //   </div>
+      //   <span>
+      //     {isEditable && (
+      //       <FontAwesomeIcon icon={faTrash} onClick={onClickCommentRemove} />
+      //     )}
+      //   </span>
+      // </CommentContainer>
+
+      <div></div>
     )
   } else {
     return null

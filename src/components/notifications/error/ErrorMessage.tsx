@@ -11,8 +11,9 @@ const ErrorContainer = styled.div`
   width: 100%;
   margin-top: 10px;
 `
+type Message = string
 
-function ErrorMessage({ message }) {
+function ErrorMessage({ message }: { message: Message }) {
   return <ErrorContainer>{message}</ErrorContainer>
 }
 

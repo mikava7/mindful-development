@@ -10,7 +10,15 @@ import { StyledLink } from '../../styled-component/styledComponents'
 import styled from 'styled-components'
 import { useState } from 'react'
 import Comments from '../../pages/Comments'
-export const ActionButton = ({
+
+interface ActionButtonProps {
+  handleHeartAndLikeClick: () => void
+  handleStarAndFavoriteClick: () => void
+  bookmarkColor: string
+  heartColor: string
+  postId: string
+}
+export const ActionButton: React.FC<ActionButtonProps> = ({
   handleHeartAndLikeClick,
   handleStarAndFavoriteClick,
   bookmarkColor,

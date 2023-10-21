@@ -1,15 +1,15 @@
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../redux/store'
 import { editPassword } from '../redux/slices/auth'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 const EditPasswordForm = () => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (newPassword !== newPassword) {
       dispatch(editPassword({ currentPassword, newPassword }))

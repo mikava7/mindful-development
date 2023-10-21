@@ -64,37 +64,37 @@ export const deletePost = createAsyncThunk<string, string>(
   }
 )
 
-export const addPostReaction = createAsyncThunk(
-  'posts/addPostReaction',
-  async (postId, { getState }) => {
-    try {
-      const userId = selectAuthData(getState())?._id
+// export const addPostReaction = createAsyncThunk(
+//   'posts/addPostReaction',
+//   async (postId, { getState }) => {
+//     try {
+//       const userId = selectAuthData(getState())?._id
 
-      const response = await instance.put(`/likePost/${postId}`, {})
+//       const response = await instance.put(`/likePost/${postId}`, {})
 
-      return { postId, userId }
-    } catch (error) {
-      console.log('Error adding post reaction:', error)
-      throw error
-    }
-  }
-)
+//       return { postId, userId }
+//     } catch (error) {
+//       console.log('Error adding post reaction:', error)
+//       throw error
+//     }
+//   }
+// )
 
-export const removePostReaction = createAsyncThunk(
-  'posts/removePostReaction',
-  async (postId: string, { getState }) => {
-    try {
-      const userId: string = selectAuthData(getState())?._id
+// export const removePostReaction = createAsyncThunk(
+//   'posts/removePostReaction',
+//   async (postId: string, { getState }) => {
+//     try {
+//       const userId: string = selectAuthData(getState())?._id
 
-      const response = await instance.delete(`/unlikePost/${postId}`)
+//       const response = await instance.delete(`/unlikePost/${postId}`)
 
-      return { postId, userId }
-    } catch (error) {
-      console.log('Error removing post reaction:', error)
-      throw error
-    }
-  }
-)
+//       return { postId, userId }
+//     } catch (error) {
+//       console.log('Error removing post reaction:', error)
+//       throw error
+//     }
+//   }
+// )
 interface PostState {
   items: Post[]
   reactedBy: string[]
@@ -135,43 +135,49 @@ const postSlice = createSlice({
         state.status = 'failed'
         state.error = action.error.message as string | null
       })
-      .addCase(addPostReaction.pending, (state) => {
-        state.status = 'loading'
-      })
-      .addCase(addPostReaction.fulfilled, (state, action) => {
-        state.status = 'succeeded'
+    // .addCase(addPostReaction.pending, (state) => {
+    //   state.status = 'loading'
+    // })
+    // .addCase(addPostReaction.fulfilled, (state, action) => {
+    //   state.status = 'succeeded'
 
-        const { postId, userId } = action.payload
-        const postIndex = state.items.findIndex((post) => post._id === postId)
-        if (
-          postIndex !== -1 &&
-          !state.items[postIndex].reactedBy.includes(userId)
-        ) {
-          state.items[postIndex].reactedBy.push(userId)
-        }
-      })
-      .addCase(addPostReaction.rejected, (state, action) => {
-        state.error = action.error.message as string | null
-        state.status = 'failed'
-      })
-      .addCase(removePostReaction.pending, (state) => {
-        state.status = 'loading'
-      })
-      .addCase(removePostReaction.fulfilled, (state, action) => {
-        state.status = 'succeeded'
+    //   const { postId, userId } = action.payload
+    //   const postIndex = state.items.findIndex((post) => post._id === postId)
+    //   if (
+    //     postIndex !== -1 &&
+    //     !state.items[postIndex].reactedBy.includes(userId)
+    //   ) {
+    //     state.items[postIndex].reactedBy.push(userId)
+    //   }
+    // })
+    // .addCase(addPostReaction.rejected, (state, action) => {
+    //   state.error = action.error.message as string | null
+    //   state.status = 'failed'
+    // })
+    // .addCase(removePostReaction.pending, (state) => {
+    //   state.status = 'loading'
+    // })
+    // .addCase(removePostReaction.fulfilled, (state, action) => {
+    //   state.status = 'succeeded'
 
-        const { postId, userId } = action.payload
-        const postIndex = state.items.findIndex((post) => post._id === postId)
-        if (postIndex !== -1) {
-          state.items[postIndex].reactedBy = state.items[
-            postIndex
-          ].reactedBy.filter((id) => id !== userId)
-        }
-      })
-      .addCase(removePostReaction.rejected, (state, action) => {
-        state.error = action.error.message as string | null
-        state.status = 'failed'
-      })
+    //   const { postId, userId } = action.payload
+    //   const postIndex = state.items.findIndex((post) => post._id === postId)
+    //   console.log('userId', userId)
+    //   console.log('Type of userId', userId)
+
+    //   if (postIndex !== -1) {
+    //     state.items[postIndex].reactedBy = state.items[
+    //       postIndex
+    //     ].reactedBy.filter((id) => {
+    //       console.log('Type of id:', typeof id) // Add this line to check the type
+    //       return id !== userId
+    //     })
+    //   }
+    // })
+    // .addCase(removePostReaction.rejected, (state, action) => {
+    //   state.error = action.error.message as string | null
+    //   state.status = 'failed'
+    // })
   },
 })
 

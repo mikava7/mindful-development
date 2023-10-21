@@ -28,24 +28,24 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const MyPage = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const [showIcons, setShowIcons] = useState(false)
-  const [isEditing, setIsEditing] = useIsEditing()
-  const [isEditingPassword, setIsEditingPassword] = useState(false)
-  const user = useSelector((state: RootState) => state.auth.user) || {}
-  const authStatus = useSelector(selectAuthStatus)
-  const { userId } = useParams
-  useEffect(() => {
-    dispatch(fetchUserData())
-  }, [dispatch])
+  // const dispatch = useDispatch()
+  // const navigate = useNavigate()
+  // const [showIcons, setShowIcons] = useState(false)
+  // const [isEditing, setIsEditing] = useIsEditing()
+  // const [isEditingPassword, setIsEditingPassword] = useState(false)
+  // const user = useSelector((state: RootState) => state.auth.user) || {}
+  // const authStatus = useSelector(selectAuthStatus)
+  // const { userId } = useParams
+  // useEffect(() => {
+  //   dispatch(fetchUserData())
+  // }, [dispatch])
 
-  const handlePasswordSubmit = (data) =>
-    handleEditPasswordSubmit(data, dispatch, setIsEditingPassword)
+  // const handlePasswordSubmit = (data) =>
+  //   handleEditPasswordSubmit(data, dispatch, setIsEditingPassword)
 
   return (
     <StyledUserPage>
-      {authStatus ? (
+      {/* {authStatus ? (
         <ProfileInfo>
           <div>
             <img
@@ -81,7 +81,7 @@ const MyPage = () => {
         </ProfileInfo>
       ) : (
         <p>not logged in</p>
-      )}
+      )} */}
     </StyledUserPage>
   )
 }

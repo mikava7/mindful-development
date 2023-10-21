@@ -14,6 +14,7 @@
 export interface UserType {
   _id: string
   username: string
+  fullName?: string
   email: string
   password: string
   createdAt: string
@@ -25,7 +26,7 @@ export interface valueTypes {
   password: string
   name: string
   imageUrl: string
-  fullname: string
+  fullName?: string
 }
 
 //

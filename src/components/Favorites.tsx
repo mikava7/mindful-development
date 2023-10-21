@@ -2,31 +2,32 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Post from './post/Post'
 import { getFavorites } from '../redux/slices/auth'
-
+import { useAppDispatch } from '../redux/store'
+import { useAppSelector } from '../redux/hooks'
 const Favorites = () => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
-  const userData = useSelector((state) => state.auth.user) || {}
-  const userId = userData._id
-  const favorites = useSelector((state) => state.auth.favorites) || []
-  const posts = useSelector((state) => state.posts.posts.items) || []
-  const status = useSelector((state) => state.auth.status) || {}
+  const userData = useAppSelector((state) => state.auth.user) || {}
+  // const userId = userData._id
+  const favorites = useAppSelector((state) => state.auth.favorites) || []
+  // const posts = useAppSelector((state) => state.posts.posts.items) || []
+  const status = useAppSelector((state) => state.auth.status) || {}
   // console.log('userId in favorite', userId)
   // console.log('userData in favorite', userData)
   // console.log('posts in favorite', posts)
   // console.log('favorites in favorite', favorites)
 
-  const favoritePosts =
-    favorites && posts.filter((post) => favorites.includes(post._id))
-  console.log('favoritePosts', favoritePosts)
-  useEffect(() => {
-    dispatch(getFavorites(userId))
-  }, [dispatch, userId])
+  // const favoritePosts =
+  //   favorites && posts.filter((post) => favorites.includes(post._id))
+  // console.log('favoritePosts', favoritePosts)
+  // useEffect(() => {
+  //   dispatch(getFavorites(userId))
+  // }, [dispatch, userId])
 
   return (
     <div>
       <h2>Favorites</h2>
-      {favoritePosts && favoritePosts.length > 0 ? (
+      {/* {favoritePosts && favoritePosts.length > 0 ? (
         favoritePosts.map((favoritePost) => (
           <div key={favoritePost._id}>
             <Post
@@ -46,7 +47,7 @@ const Favorites = () => {
         ))
       ) : (
         <div>No favorite posts found.</div>
-      )}
+      )} */}
       {status === 'loading' && <div>Loading...</div>}
     </div>
   )

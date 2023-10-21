@@ -6,8 +6,8 @@ import {
   selectUsers,
   selectUsersLoadingStatus,
   selectUsersErrorState,
-  getAllUsers,
 } from '../redux/slices/user/userSlice'
+import { getAllUsers } from '../redux/slices/user/userThunk'
 import { Link } from 'react-router-dom'
 import LoadingSpinner from './notifications/loading/LoadingSpinner'
 import ErrorMessage from './notifications/error/ErrorMessage'
@@ -20,10 +20,9 @@ interface UsersData {
 
 const AllUsers = () => {
   const dispatch = useAppDispatch()
-  const usersData: UsersData[] = useAppSelector(selectUsers)
+  const usersData: any[] = useAppSelector(selectUsers)
   const loadingStatus = useAppSelector(selectUsersLoadingStatus)
   const error = useAppSelector(selectUsersErrorState)
-
   useEffect(() => {
     dispatch(getAllUsers())
   }, [dispatch])
@@ -37,7 +36,7 @@ const AllUsers = () => {
         <ErrorMessage message={error} />
       ) : (
         <UserList>
-          {usersData.AllUser.map((user) => (
+          {/* {usersData.AllUser.map((user) => (
             <UserCard key={user._id}>
               <Link to={`/users/${user._id}`}>
                 <UserImage
@@ -47,7 +46,7 @@ const AllUsers = () => {
                 <UserName>{user.fullName}</UserName>
               </Link>
             </UserCard>
-          ))}
+          ))} */}
         </UserList>
       )}
     </StyledAllUsers>

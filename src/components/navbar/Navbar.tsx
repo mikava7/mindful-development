@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useAppSelector } from '../../redux/hooks'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import {
@@ -20,8 +21,9 @@ import {
   faUsers,
 } from '@fortawesome/free-solid-svg-icons'
 const Navbar = () => {
-  const favorites = useSelector((state) => state.favorites.favorites) || {}
-  const favoritesLength = favorites.favorites && favorites.favorites.length
+  const favorites = useAppSelector((state) => state.favorites.favorites) || {}
+  // const favoritesLength = favorites.favorites && favorites.favorites.length
+  const favoritesLength = 1
 
   const [isOpen, setIsOpen] = useState(false)
   const toggleMenu = () => {
