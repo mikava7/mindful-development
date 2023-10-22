@@ -28,6 +28,7 @@ import { faMoon as farMoon } from '@fortawesome/free-regular-svg-icons'
 import AllUsers from './components/AllUsers'
 import MyPage from './components/MyPage'
 import User from './components/User'
+import SuccessMessage from './components/notifications/SuccessMessage/SuccessMessage'
 function App() {
   const [theme, setTheme] = useState('light')
 
@@ -73,6 +74,7 @@ function App() {
           <Route path="/history" element={<History />} />
           <Route path="/read-later" element={<ReadLater />} />
           <Route path="/favorites" element={<Favorites />} />
+          <Route path="/SuccessMessage" element={<SuccessMessage />} />
         </Routes>
       </FlexContainer>
     </ThemeProvider>

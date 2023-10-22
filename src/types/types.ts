@@ -64,6 +64,8 @@ export interface Author {
   _id: string
 }
 export interface Post {
+  find(arg0: (post: any) => boolean): unknown
+  map(arg0: (post: any) => JSX.Element): import('react').ReactNode
   comments: CommentType
   _id: string
   viewCount: number
@@ -74,12 +76,29 @@ export interface Post {
   reactedBy: ReactedBy[]
   tags: Tags[]
   author: Author
+  Fields?: Fields[]
 }
 
 export interface Fields {
   title: string
   content: string
   imageUrl: string
-  tags: string[]
   userId: string
+  tags: string[]
+}
+export interface PostProps {
+  _id: string
+  userId?: string
+  title: string
+  createdAt: string | number | Date
+  imageUrl: string
+  author: string
+  viewCount: number
+  isLoading: boolean
+  isEditable: boolean | false
+  content: string
+  truncate: boolean
+  postId?: string
+  onClickRemove: (id: string) => void
+  handleRemove?: (id: string) => void
 }

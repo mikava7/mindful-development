@@ -32,8 +32,7 @@ interface PostProps {
   imageUrl: string
   author: string
   viewCount: number
-  isLoading: boolean
-  isEditable: boolean
+  isEditable: boolean | false
   content: string
   truncate: boolean
   onClickRemove: (id: string) => void
@@ -45,7 +44,6 @@ const Post: React.FC<PostProps> = ({
   imageUrl,
   author,
   viewCount,
-  isLoading,
   isEditable,
   content,
   onClickRemove,
@@ -108,10 +106,6 @@ const Post: React.FC<PostProps> = ({
 
   const handleRemove = () => {
     onClickRemove(_id)
-  }
-
-  if (isLoading) {
-    return <PostSkeleton />
   }
 
   return (

@@ -6,7 +6,8 @@ import {
   ImageContainer,
 } from '../../styled-component/styledComponents'
 import EditButtons from '../editButtons/EditButtons'
-const PostBody = ({
+import { PostProps } from '../../types/types'
+const PostBody: React.FC<PostProps> = ({
   truncate,
   content,
   imageUrl,
@@ -19,7 +20,9 @@ const PostBody = ({
 }) => {
   return (
     <BodyContainer>
-      <StyledLink to={`/posts/${postId}`}>{title.substring(0, 60)} </StyledLink>
+      <StyledLink to={`/posts/${postId}`}>
+        {title && title?.substring(0, 60)}{' '}
+      </StyledLink>
       <Text alignSelf={'flex-end'}>{author}</Text>
       <EditButtonsContainer>
         {isEditable && (
@@ -27,9 +30,9 @@ const PostBody = ({
         )}
       </EditButtonsContainer>
       <ImageContainer flexDirection={'column'}>
-        <img src={imageUrl} alt={title.substring(0, 60)} />
+        <img src={imageUrl} alt={title && title?.substring(0, 60)} />
       </ImageContainer>
-      <Text>{truncate ? content.substring(0, 300) + '...' : content}</Text>
+      <Text>{truncate ? content?.substring(0, 300) + '...' : content}</Text>
     </BodyContainer>
   )
 }

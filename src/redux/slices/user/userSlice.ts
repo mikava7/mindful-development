@@ -6,7 +6,7 @@ import { getAllUsers, fetchUserById, editUserInfo } from './userThunk'
 import { UserType } from '../../../types/types'
 interface UsersData {
   AllUser: Author[]
-  // You can add other properties here if needed
+  _id: string
 }
 
 interface UsersState {

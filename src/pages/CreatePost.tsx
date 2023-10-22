@@ -14,7 +14,9 @@ import {
   FlexContainer,
   ImageContainer,
 } from '../styled-component/styledComponents.js'
-import { createPost } from '../redux/slices/posts/postThunk.js'
+import { createPost, updatePost } from '../redux/slices/posts/postThunk.js'
+import SuccessMessage from '../components/notifications/SuccessMessage/SuccessMessage.js'
+type ImageUrl = string
 const CreatePost = () => {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -23,7 +25,7 @@ const CreatePost = () => {
   const isEditing = Boolean(id)
   const userData = useAppSelector(selectUserData)
   const userId = userData ? userData._id : null
-  console.log('userId', userId)
+  // console.log('userId', userId)
   // Define your state variables
   const [content, setContent] = useState('')
   const [title, setTitle] = useState('')
@@ -33,7 +35,7 @@ const CreatePost = () => {
   )
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleImageUpload = (imageUrl) => {
+  const handleImageUpload = (imageUrl: ImageUrl) => {
     setImageUrl(imageUrl)
   }
 
@@ -56,7 +58,7 @@ const CreatePost = () => {
     fetchData()
   }, [isEditing])
 
-  const onSubmit = async (event) => {
+  const onSubmit = async (event: Event) => {
     event.preventDefault()
     try {
       setIsLoading(true)
@@ -72,12 +74,14 @@ const CreatePost = () => {
       if (isEditing) {
         // Dispatch an action to update the post
         dispatch(updatePost({ id, fields })).then(() => {
-          navigate('/')
+          navigate(`/posts/${id}`)
         })
       } else {
         // Dispatch an action to create a new post
         dispatch(createPost(fields)).then(() => {
-          navigate('/')
+          setTimeout(() => {
+            navigate(`/SuccessMessage`)
+          }, 1000)
         })
       }
     } catch (error) {
@@ -87,7 +91,7 @@ const CreatePost = () => {
     }
   }
 
-  const onChangeTags = useCallback((event) => {
+  const onChangeTags = useCallback((event: Event) => {
     setTags(event.target.value)
   }, [])
 

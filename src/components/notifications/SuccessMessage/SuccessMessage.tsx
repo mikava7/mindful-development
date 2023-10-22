@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-
+import { Link } from 'react-router-dom'
 // Styled component for the success message container
 const SuccessContainer = styled.div`
   background-color: #4caf50; /* Green background color */
@@ -15,7 +15,11 @@ type SuccessMessageProps = {
   message: string
 }
 
-function SuccessMessage({ message }: SuccessMessageProps) {
-  return <SuccessContainer>{message}</SuccessContainer>
+function SuccessMessage() {
+  return (
+    <SuccessContainer>
+      <Link to="/">Home</Link>
+    </SuccessContainer>
+  )
 }
 export default SuccessMessage

@@ -39,21 +39,20 @@ export const editPassword = createAsyncThunk<
   }
 )
 
-export const fetchUserData = createAsyncThunk(
-  'auth/fetchUserData',
-  async () => {
-    try {
-      // Make a POST request to the /auth/login endpoint with the provided params
-      const response = await axios.get('/auth/user-info')
-      const user = response.data
-      return user
-    } catch (error) {
-      // If an error occurs, log it to the console and re-throw the error
-      console.log('cant authenticate')
-      throw error
-    }
-  }
-)
+export const fetchUserData =
+  createAsyncThunk()
+  // 'auth/fetchUserData',
+  // async () => {
+  //   try {
+  //     // Make a POST request to the /auth/login endpoint with the provided params
+  //     const response = await axios.get('/auth/user-info')
+  //     const user = response.data
+  //     return user
+  //   } catch (error) {
+  //     // If an error occurs, log it to the console and re-throw the error
+  //     throw error
+  //   }
+  // }
 
 export const VisitedPosts = createAsyncThunk(
   'posts/VisitedPosts',

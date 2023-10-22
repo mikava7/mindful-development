@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
 import { useAppSelector, useAppDispatch } from '../redux/hooks'
-import { Link, useParams } from 'react-router-dom'
-import Comments from './Comments'
 import Post from '../components/post/Post'
+import { UserType, Post as PostType } from '../types/types'
+import { Navigate } from 'react-router-dom'
 import Tags from '../pages/Tags'
-import Products from '../components/Products'
-import Navbar from '../components/navbar/Navbar'
 import { fetchPosts, deletePost } from '../redux/slices/posts/postThunk'
 import {
   fetchTags,
@@ -15,33 +12,31 @@ import {
   selectTagsErrorState,
   selectTagsLoading,
 } from '../redux/slices/tags/tagsSlice'
-import { fetchComments } from '../redux/slices/commentSlice'
-import { fetchUserData } from '../redux/slices/auth'
 import {
-  FlexContainer,
-  CardContainer,
-} from '../styled-component/styledComponents'
+  selectPosts,
+  selectPostStatus,
+  selectPostError,
+} from '../redux/slices/posts/posts'
+import { selectUserId } from '../redux/slices/auth/authSlice'
+import LoadingSpinner from '../components/notifications/loading/LoadingSpinner'
+import ErrorMessage from '../components/notifications/error/ErrorMessage'
+import SuccessMessage from '../components/notifications/SuccessMessage/SuccessMessage'
+type Tag = null | string
 
 const Home = () => {
   const dispatch = useAppDispatch()
 
   const [reset, setReset] = useState(false)
-  const posts = useSelector((state) => state.posts) || {}
-  console.log('posts', posts)
-  const userData = useSelector((state) => state.auth.user) || {}
+  const posts = useAppSelector(selectPosts) || []
+  const postStatus = useAppSelector(selectPostStatus)
+  const postError = useAppSelector(selectPostError)
+  const userId = useAppSelector(selectUserId)
 
-  const isPostsLoading = posts.status === 'loading'
   const tags = useAppSelector(selectTags)
   const isTagsLoading = useAppSelector(selectTagsLoading)
   const tagsError = useAppSelector(selectTagsErrorState)
-  // console.log('isTagsLoading', isTagsLoading)
-  const comments = useSelector((state) => state.comments.comments)
 
   const [selectedTag, setSelectedTag] = useState(null)
-
-  useEffect(() => {
-    dispatch(fetchUserData())
-  }, [dispatch])
 
   useEffect(() => {
     dispatch(fetchPosts())
@@ -51,53 +46,68 @@ const Home = () => {
     dispatch(fetchTags())
   }, [])
 
-  const onClickRemove = (postId) => {
-    dispatch(deletePost(postId))
-  }
+  const onClickRemove = (postId: string, userId: string) => {
+    dispatch(deletePost({ postId, userId }))
 
-  const handleTagClick = (tag) => {
-    setSelectedTag(tag)
+    return <Navigate to="/" />
+  }
+  const handleTagClick = (tag: Tag) => {
+    setSelectedTag(tag as SetStateAction<null>)
   }
 
   const filteredPosts = reset
-    ? posts.items
+    ? posts
     : selectedTag
-    ? posts.items.filter((post) => post.tags.includes(selectedTag))
-    : posts.items
+    ? posts.filter((post) => post.tags.includes(selectedTag))
+    : posts
   const postsToRender = reset
-    ? posts.items
+    ? posts
     : selectedTag
     ? filteredPosts.filter((post) => post.tags.includes(selectedTag))
     : filteredPosts
 
+  if (postStatus === 'pending') {
+    return <LoadingSpinner />
+  } else if (postStatus === 'idle' && postError) {
+    return <SuccessMessage message={postError} />
+  } else if (postStatus === 'rejected' && postError !== null) {
+    return <ErrorMessage message={postError} />
+  }
+
   return (
-    <HomeContainer flexDirection="column">
+    <HomeContainer>
       <Tags
         items={tags}
         onTagClick={handleTagClick}
         setSelectedTag={setSelectedTag}
         setReset={setReset}
       />
+      {postError && <SuccessMessage message={postError} />}
       <Card>
-        {isPostsLoading
-          ? [Array(5)]
-          : postsToRender.map((post, index) => (
-              <Post
-                key={post._id}
-                _id={post._id}
-                title={post.title}
-                content={post.content}
-                truncate={true}
-                createdAt={post.createdAt}
-                imageUrl={`http://localhost:5000${post.imageUrl}`}
-                author={post.author.fullName}
-                viewCount={post.viewCount}
-                tags={post.tags}
-                comments={post.comments}
-                isEditable={userData?._id === post.author?._id}
-                onClickRemove={() => onClickRemove(post._id)}
-              />
-            ))}
+        {postsToRender &&
+          postsToRender?.map((postArray) => {
+            return (
+              <div key={postArray._id}>
+                {postArray?.map((post) => {
+                  return (
+                    <Post
+                      key={post._id}
+                      _id={post._id}
+                      title={post.title}
+                      truncate={true}
+                      content={post.content}
+                      createdAt={post.createdAt}
+                      imageUrl={`http://localhost:5000${post.imageUrl}`}
+                      author={post.author?.fullName}
+                      viewCount={post.viewCount}
+                      isEditable={userId === post.author?._id}
+                      onClickRemove={() => onClickRemove(post._id, userId)}
+                    />
+                  )
+                })}
+              </div>
+            )
+          })}
       </Card>
     </HomeContainer>
   )

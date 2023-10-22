@@ -5,6 +5,9 @@ import {
   fetchComments,
   deleteComment,
 } from '../redux/slices/commentSlice'
+import { useAppDispatch } from '../redux/store.js'
+import { useAppSelector } from '../redux/hooks.js'
+import { selectUserData } from '../redux/slices/auth/authSlice.js'
 
 import Comment from '../components/Comment'
 import CommentForm from './CommentForm'
@@ -17,8 +20,8 @@ const Comments = ({ postId }: Props) => {
   const [expanded, setExpanded] = useState({})
   const [showComments, setShowComments] = useState(false)
   // Get dispatch function and user data from Redux store
-  const dispatch = useDispatch()
-  const userId = useSelector((state) => state.auth.user)?._id || {}
+  const dispatch = useAppDispatch()
+  const userId = useAppSelector(selectUserData)
 
   // console.log('Comments', { userId, postId, commentText })
   // Get comments from Redux store

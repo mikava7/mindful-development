@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useForm, RegisterOptions } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
 import { useAppDispatch } from '../redux/store'
 import {
   selectAuthStatus,

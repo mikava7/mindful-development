@@ -5,7 +5,7 @@ import { registerUser, fetchLogin, logout } from './authThunk'
 import { UserType } from '../../../types/types'
 // Define the initial state for the auth slice
 interface AuthState {
-  userData: UserType | null
+  userData: UserType | null | undefined
   status: 'idle' | 'pending' | 'fulfilled' | 'rejected'
   error: null | string
 }
@@ -78,6 +78,7 @@ export const selectUserData = (state: RootState) => state.auth.userData
 
 // Select the error information from the state
 export const selectAuthError = (state: RootState) => state.auth.error
+export const selectUserId = (state: RootState) => state.auth.userData?._id || ''
 
 // Export the reducer and actions
 export const {} = authSlice.actions

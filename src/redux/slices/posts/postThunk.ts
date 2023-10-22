@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import instance from '../../../axios'
 import { Post, Fields } from '../../../types/types'
+import { PostDetails } from '../../../components/postdetails/PostDetails'
 export const fetchPosts = createAsyncThunk<Post, void, { rejectValue: string }>(
   'posts/fetchPosts',
   async (_, { rejectWithValue }) => {
@@ -30,7 +31,6 @@ export const createPost = createAsyncThunk<Post, Fields>(
   'posts/createPost',
   async (fields, { rejectWithValue }) => {
     try {
-      console.log('fields', fields)
       const { data } = await instance.post('/posts', fields)
       console.log('data', data)
 
@@ -66,15 +66,22 @@ export const updateViewCount = createAsyncThunk(
     }
   }
 )
-export const deletePost = createAsyncThunk<string, string>(
-  'posts/removePost',
-  async (postId) => {
-    try {
-      await instance.delete(`/posts/${postId}`)
-
-      return postId
-    } catch (error) {
-      throw error
-    }
+interface PostDetails {
+  _id: any
+  postId: string
+  userId: string | null
+}
+export const deletePost = createAsyncThunk<
+  string,
+  { postId: string; userId: string }
+>('posts/removePost', async ({ postId, userId }) => {
+  try {
+    const { data } = await instance.delete(`/posts/${postId}`, {
+      data: { userId },
+    })
+    console.log('data in thunk', data)
+    return data
+  } catch (error) {
+    throw error
   }
-)
+})

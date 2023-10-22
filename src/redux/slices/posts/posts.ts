@@ -37,8 +37,10 @@ const postSlice = createSlice({
         state.status = 'pending'
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
-        state.items = action.payload
-        state.status = 'fulfilled'
+        if (Array.isArray(state.items)) {
+          state.items.push(action.payload)
+          state.status = 'fulfilled'
+        }
       })
       .addCase(fetchPosts.rejected, (state) => {
         state.items = []
@@ -56,17 +58,15 @@ const postSlice = createSlice({
         state.items = []
         state.status = 'rejected'
       })
-      .addCase(deletePost.fulfilled, (state, action: PayloadAction<string>) => {
-        state.items = state.items.filter((post) => post._id !== action.payload)
-        state.status = 'fulfilled'
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.status = 'idle'
+        state.error = action.payload
       })
-      .addCase(
-        updateViewCount.rejected,
-        (state, action: PayloadAction<any>) => {
-          state.status = 'rejected'
-          state.error = action.error?.message ?? null
-        }
-      )
+
+      .addCase(updateViewCount.rejected, (state, action) => {
+        state.status = 'rejected'
+        state.error = action.error?.message ?? null
+      })
   },
 })
 
