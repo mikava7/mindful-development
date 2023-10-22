@@ -8,7 +8,7 @@ import Post from '../components/post/Post'
 import Tags from '../pages/Tags'
 import Products from '../components/Products'
 import Navbar from '../components/navbar/Navbar'
-import { fetchPosts, deletePost } from '../redux/slices/posts'
+import { fetchPosts, deletePost } from '../redux/slices/posts/postThunk'
 import {
   fetchTags,
   selectTags,
@@ -27,6 +27,7 @@ const Home = () => {
 
   const [reset, setReset] = useState(false)
   const posts = useSelector((state) => state.posts) || {}
+  console.log('posts', posts)
   const userData = useSelector((state) => state.auth.user) || {}
 
   const isPostsLoading = posts.status === 'loading'

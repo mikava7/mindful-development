@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
 
-import { postReducer } from './slices/posts'
+import { postReducer } from './slices/posts/posts'
 // import { authReducer } from './slices/auth'
 import { authReducer } from './slices/auth/authSlice'
 import { commentReducer } from './slices/commentSlice'

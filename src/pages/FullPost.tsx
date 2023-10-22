@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react'
 import Post from '../components/post/Post'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAppSelector } from '../redux/hooks'
-import { deletePost, updateViewCount, fetchPosts } from '../redux/slices/posts'
+import {
+  deletePost,
+  updateViewCount,
+  fetchPosts,
+} from '../redux/slices/posts/posts'
 import { fetchComments } from '../redux/slices/commentSlice'
 
 import ReactMarkdown from 'react-markdown'

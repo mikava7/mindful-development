@@ -23,6 +23,7 @@ const authSlice = createSlice<AuthState, any, 'auth'>({
   reducers: {},
   extraReducers: (builder) => {
     builder
+
       .addCase(registerUser.pending, (state) => {
         // When the async thunk is pending, set the status to 'pending' and clear any existing user data
         state.status = 'pending'
@@ -59,6 +60,14 @@ const authSlice = createSlice<AuthState, any, 'auth'>({
         state.userData = null
         state.error = action.payload
       })
+      .addMatcher(
+        (action) =>
+          action.type.startsWith('auth/') && action.type.endsWith('fulfilled'),
+        (state, action) => {
+          // Update the user ID selector when user data is fetched
+          state.userData = action.payload
+        }
+      )
   },
 })
 

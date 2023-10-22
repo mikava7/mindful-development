@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { addPostReaction, removePostReaction } from '../redux/slices/posts'
+import {
+  addPostReaction,
+  removePostReaction,
+} from '../redux/slices/posts/posts'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'

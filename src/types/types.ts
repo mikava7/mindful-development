@@ -75,3 +75,11 @@ export interface Post {
   tags: Tags[]
   author: Author
 }
+
+export interface Fields {
+  title: string
+  content: string
+  imageUrl: string
+  tags: string[]
+  userId: string
+}
