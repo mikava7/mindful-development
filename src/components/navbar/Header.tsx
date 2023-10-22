@@ -1,42 +1,52 @@
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearUserData } from '../../redux/slices/auth'
-import { selectAuthStatus } from '../../redux/slices/auth'
+import {
+  selectAuthStatus,
+  selectAuthError,
+} from '../../redux/slices/auth/authSlice'
+import { useNavigate } from 'react-router-dom'
+import { logout } from '../../redux/slices/auth/authThunk'
+import { selectUserData } from '../../redux/slices/auth/authSlice'
 import {
   FlexContainer,
   Container,
   StyledLink,
 } from '../../styled-component/styledComponents'
-
+import LoadingSpinner from '../notifications/loading/LoadingSpinner'
+import ErrorMessage from '../notifications/error/ErrorMessage'
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
-  const isAuthentnicated = useAppSelector(selectAuthStatus)
+  const authStatus = useAppSelector(selectAuthStatus)
+  const authError = useAppSelector(selectAuthError)
+  const user = useAppSelector(selectUserData)
   const dispatch = useAppDispatch()
-  const user = useAppSelector((state) => state.auth.data)
+  const navigate = useNavigate()
+  console.log('user', user)
+  console.log('authStatus', authStatus)
 
-  const onClickLogout = () => {
-    // Prompt the user to confirm they want to log out
-    if (window.confirm('Do you want to log out?')) {
-      // Dispatch the clearUserData action to clear the user data in Redux store
-      dispatch(clearUserData())
-      // Remove the token from local storage
-      window.localStorage.removeItem('token')
-    }
+  const onClickLogout = async () => {
+    await dispatch(logout())
+    navigate('/')
   }
+
   return (
     <div>
       <FlexContainer width={'300px'}>
-        {isAuthentnicated ? (
+        {authStatus === 'fulfilled' ? (
           <>
-            <StyledLink to="/create-post">create post</StyledLink>
+            <StyledLink to="/create-post">Create Post</StyledLink>
             <button onClick={onClickLogout}>Logout</button>
-            <p>{user.fullName}</p>
+            <p>{user?.fullName}</p>
+            {authError && <p>{authError}</p>}
           </>
         ) : (
           <Container width={'200px'} justifyContent="space-around">
+            {authStatus === 'rejected' && authError !== null && (
+              <ErrorMessage message={authError} />
+            )}
             <StyledLink to="/login">Login</StyledLink>
-
-            <StyledLink to="/register">Create account</StyledLink>
+            <StyledLink to="/register">Create Account</StyledLink>
           </Container>
         )}
       </FlexContainer>

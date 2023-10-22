@@ -14,7 +14,8 @@ const ErrorContainer = styled.div`
 type Message = string
 
 function ErrorMessage({ message }: { message: Message }) {
-  return <ErrorContainer>{message}</ErrorContainer>
+  console.log('message in ErrorMessage', message)
+  return <ErrorContainer> error{message}</ErrorContainer>
 }
 
 export default ErrorMessage

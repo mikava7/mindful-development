@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
-import { registerUser, fetchLogin } from './authThunk'
+import { registerUser, fetchLogin, logout } from './authThunk'
 import { UserType } from '../../../types/types'
 // Define the initial state for the auth slice
 interface AuthState {
@@ -28,14 +28,11 @@ const authSlice = createSlice<AuthState, any, 'auth'>({
         state.status = 'pending'
         state.userData = null
       })
-      .addCase(
-        registerUser.fulfilled,
-        (state, action: PayloadAction<string>) => {
-          // When the async thunk is fulfilled, set the status to 'fulfilled' and update the user data with the fetched data
-          state.status = 'fulfilled'
-          state.userData = action.payload
-        }
-      )
+      .addCase(registerUser.fulfilled, (state, action) => {
+        // When the async thunk is fulfilled, set the status to 'fulfilled' and update the user data with the fetched data
+        state.status = 'fulfilled'
+        state.userData = action.payload
+      })
       .addCase(registerUser.rejected, (state) => {
         // When the async thunk is rejected, set the status to 'rejected' and clear any existing user data
         state.status = 'rejected'
@@ -55,6 +52,12 @@ const authSlice = createSlice<AuthState, any, 'auth'>({
         // When the async thunk is rejected, set the status to "error" and clear any existing data
         state.status = 'rejected'
         state.userData = null
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.status = 'idle'
+
+        state.userData = null
+        state.error = action.payload
       })
   },
 })

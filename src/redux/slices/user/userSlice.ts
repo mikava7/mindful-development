@@ -14,12 +14,14 @@ interface UsersState {
   status: 'idle' | 'pending' | 'fulfilled' | 'rejected'
   error: string | null
   user: UserType | null | string
+  isAuthenticated: boolean
 }
 const initialState: UsersState = {
   users: [],
   status: 'idle',
   error: null,
   user: null,
+  isAuthenticated: false,
 }
 
 const usersSlice = createSlice({

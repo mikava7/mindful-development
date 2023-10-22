@@ -31,3 +31,13 @@ export const fetchLogin = createAsyncThunk(
     }
   }
 )
+
+export const logout = createAsyncThunk('auth/logout', async () => {
+  try {
+    // Make a request to the logout endpoint on your server to clear the token
+    const response = await axios.post('/auth/logout')
+    return response.data.message
+  } catch (error) {
+    console.log('Error during logout:', error)
+  }
+})
